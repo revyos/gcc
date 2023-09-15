@@ -57,7 +57,7 @@
     if (model == MEMMODEL_SEQ_CST)
 	return "fence\trw,rw";
     else if (model == MEMMODEL_ACQ_REL)
-	return "fence.tso";
+	return "fence\trw,rw";
     else if (model == MEMMODEL_ACQUIRE)
 	return "fence\tr,rw";
     else if (model == MEMMODEL_RELEASE)
