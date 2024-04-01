@@ -66,14 +66,14 @@ extern const char *riscv_expand_abi_from_cpu (int argc, const char **argv);
   {"tune", "%{!mtune=*:"						\
 	   "  %{!mcpu=*:-mtune=%(VALUE)}"				\
 	   "  %{mcpu=*:-mtune=%:riscv_default_mtune(%* %(VALUE))}}" },	\
-  {"arch", "%{!march=*:"						\
-	   "  %{!mcpu=*:-march=%(VALUE)}"				\
-	   "  %{mcpu=*:%:riscv_expand_arch_from_cpu(%* %(VALUE))}}" },	\
   {"abi", "%{!mabi=*:"							\
 	   "  %{!march=*:"						\
 	   "    %{!mcpu=*:-mabi=%(VALUE)}"				\
 	   "    %{mcpu=*:%:riscv_expand_abi_from_cpu(%* %(VALUE))}}"	\
-	   "  %{march=*:%:riscv_expand_abi_from_arch(%*)}}" }
+	   "  %{march=*:%:riscv_expand_abi_from_arch(%*)}}" },		\
+  {"arch", "%{!march=*:"						\
+	   "  %{!mcpu=*:-march=%(VALUE)}"				\
+	   "  %{mcpu=*:%:riscv_expand_arch_from_cpu(%* %(VALUE))}}" }
 
 #ifdef IN_LIBGCC2
 #undef TARGET_64BIT
