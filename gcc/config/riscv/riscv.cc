@@ -9604,14 +9604,13 @@ riscv_override_options_internal (struct gcc_options *opts)
   riscv_slow_unaligned_access_p = (cpu->tune_param->slow_unaligned_access
 				   || TARGET_STRICT_ALIGN);
 
-  /* Make a note if user explicity passed -mstrict-align for later
   /* By default, when -mno-vector-strict-align is not specified, do not allow
      unaligned vector memory accesses except if -mtune's setting explicitly
      allows it.  */
   riscv_vector_unaligned_access_p = opts->x_rvv_vector_strict_align == 0
     || cpu->tune_param->vector_unaligned_access;
 
-  /* Make a note if user explicity passed -mstrict-align for later
+  /* Make a note if user explicitly passed -mstrict-align for later
      builtin macro generation.  Can't use target_flags_explicitly since
      it is set even for -mno-strict-align.  */
   riscv_user_wants_strict_align = TARGET_STRICT_ALIGN_OPTS_P (opts);
