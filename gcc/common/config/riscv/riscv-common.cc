@@ -251,6 +251,9 @@ static const riscv_implied_info_t riscv_implied_info[] =
   {"svade", "zicsr"},
 
   {"svbare", "zicsr"},
+  {"ssnpm", "zicsr"},
+  {"smnpm", "zicsr"},
+  {"smmpm", "zicsr"},
 
   {"xtheadvarith", "v"},
   {"xtheadvcoder", "v"},
@@ -457,6 +460,12 @@ static const struct riscv_ext_version riscv_ext_version_table[] =
   {"sstvala",   ISA_SPEC_CLASS_NONE, 1, 0},
   {"sstvecd",   ISA_SPEC_CLASS_NONE, 1, 0},
   {"ssu64xl",   ISA_SPEC_CLASS_NONE, 1, 0},
+
+  {"ssnpm",     ISA_SPEC_CLASS_NONE, 1, 0},
+  {"smnpm",     ISA_SPEC_CLASS_NONE, 1, 0},
+  {"smmpm",     ISA_SPEC_CLASS_NONE, 1, 0},
+  {"sspm",      ISA_SPEC_CLASS_NONE, 1, 0},
+  {"supm",      ISA_SPEC_CLASS_NONE, 1, 0},
 
   {"svade",   ISA_SPEC_CLASS_NONE, 1, 0},
   {"svadu",   ISA_SPEC_CLASS_NONE, 1, 0},
@@ -1465,6 +1474,26 @@ riscv_subset_list::check_conflict_ext ()
     error_at (m_loc, "%<-march=%s%>: zcf extension supports in rv32 only",
 	      m_arch);
 
+  if (lookup ("ssnpm") && m_xlen == 32)
+    error_at (m_loc, "%<-march=%s%>: ssnpm extension supports in rv64 only",
+	      m_arch);
+
+  if (lookup ("smnpm") && m_xlen == 32)
+    error_at (m_loc, "%<-march=%s%>: smnpm extension supports in rv64 only",
+	      m_arch);
+
+  if (lookup ("smmpm") && m_xlen == 32)
+    error_at (m_loc, "%<-march=%s%>: smmpm extension supports in rv64 only",
+	      m_arch);
+
+  if (lookup ("sspm") && m_xlen == 32)
+    error_at (m_loc, "%<-march=%s%>: sspm extension supports in rv64 only",
+	      m_arch);
+
+  if (lookup ("supm") && m_xlen == 32)
+    error_at (m_loc, "%<-march=%s%>: supm extension supports in rv64 only",
+	      m_arch);
+
   if (lookup ("zfinx") && lookup ("f"))
     error_at (m_loc,
 	      "%<-march=%s%>: z*inx conflicts with floating-point "
@@ -1895,6 +1924,12 @@ static const riscv_ext_flag_table_t riscv_ext_flag_table[] =
   RISCV_EXT_FLAG_ENTRY ("svinval", x_riscv_sv_subext, MASK_SVINVAL),
   RISCV_EXT_FLAG_ENTRY ("svbare",  x_riscv_sv_subext, MASK_SVBARE),
   RISCV_EXT_FLAG_ENTRY ("svnapot", x_riscv_sv_subext, MASK_SVNAPOT),
+
+  RISCV_EXT_FLAG_ENTRY ("ssnpm", x_riscv_sv_subext, MASK_SSNPM),
+  RISCV_EXT_FLAG_ENTRY ("smnpm", x_riscv_sv_subext, MASK_SMNPM),
+  RISCV_EXT_FLAG_ENTRY ("smmpm", x_riscv_sv_subext, MASK_SMMPM),
+  RISCV_EXT_FLAG_ENTRY ("sspm", x_riscv_sv_subext, MASK_SSPM),
+  RISCV_EXT_FLAG_ENTRY ("supm", x_riscv_sv_subext, MASK_SUPM),
 
   RISCV_EXT_FLAG_ENTRY ("ztso", x_riscv_ztso_subext, MASK_ZTSO),
 
