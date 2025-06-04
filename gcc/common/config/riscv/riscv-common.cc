@@ -243,6 +243,8 @@ static const riscv_implied_info_t riscv_implied_info[] =
   {"sscofpmf", "zicsr"},
   {"ssstateen", "zicsr"},
   {"sstc", "zicsr"},
+  {"svadu", "zicsr"},
+  {"svade", "zicsr"},
 
   {"svbare", "zicsr"},
 
