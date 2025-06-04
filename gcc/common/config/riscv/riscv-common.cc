@@ -227,6 +227,8 @@ static const riscv_implied_info_t riscv_implied_info[] =
   {"ssstateen", "zicsr"},
   {"sstc", "zicsr"},
 
+  {"svbare", "zicsr"},
+
   {"xtheadvarith", "v"},
   {"xtheadvcoder", "v"},
   {"xtheadvcrypto", "v"},
@@ -415,6 +417,7 @@ static const struct riscv_ext_version riscv_ext_version_table[] =
   {"sstc",      ISA_SPEC_CLASS_NONE, 1, 0},
 
   {"svinval", ISA_SPEC_CLASS_NONE, 1, 0},
+  {"svbare", ISA_SPEC_CLASS_NONE, 1, 0},
   {"svnapot", ISA_SPEC_CLASS_NONE, 1, 0},
   {"svpbmt",  ISA_SPEC_CLASS_NONE, 1, 0},
 
@@ -1739,6 +1742,7 @@ static const riscv_ext_flag_table_t riscv_ext_flag_table[] =
   RISCV_EXT_FLAG_ENTRY ("zcmt", x_riscv_zc_subext, MASK_ZCMT),
 
   RISCV_EXT_FLAG_ENTRY ("svinval", x_riscv_sv_subext, MASK_SVINVAL),
+  RISCV_EXT_FLAG_ENTRY ("svbare",  x_riscv_sv_subext, MASK_SVBARE),
   RISCV_EXT_FLAG_ENTRY ("svnapot", x_riscv_sv_subext, MASK_SVNAPOT),
 
   RISCV_EXT_FLAG_ENTRY ("ztso", x_riscv_ztso_subext, MASK_ZTSO),
