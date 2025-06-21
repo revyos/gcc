@@ -281,3 +281,7 @@
   "Shifting immediate for SIMD shufflei3."
   (and (match_code "const_int")
        (match_test "IN_RANGE (ival, -64, -1)")))
+
+(define_constraint "Q"
+  "An address operand that is valid for a prefetch instruction"
+  (match_operand 0 "prefetch_operand"))

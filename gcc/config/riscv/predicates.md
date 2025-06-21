@@ -33,6 +33,18 @@
             (match_test "UINTVAL (op) == GET_MODE_MASK (HImode)
 			 || UINTVAL (op) == GET_MODE_MASK (SImode)"))))
 
+;; REG or REG+D where D fits in a simm12 and has the low 4 bits
+;; off.  The REG+D form can be reloaded into a temporary if needed
+;; after FP elimination if that exposes an invalid offset.
+(define_predicate "prefetch_operand"
+  (ior (match_operand 0 "register_operand")
+       (and (match_test "const_arith_operand (op, VOIDmode)")
+	    (match_test "(INTVAL (op) & 0xf) == 0"))
+       (and (match_code "plus")
+	    (match_test "register_operand (XEXP (op, 0), word_mode)")
+	    (match_test "const_arith_operand (XEXP (op, 1), VOIDmode)")
+	    (match_test "(INTVAL (XEXP (op, 1)) & 0xf) == 0"))))
+
 (define_predicate "lui_operand"
   (and (match_code "const_int")
        (match_test "LUI_OPERAND (INTVAL (op))")))
