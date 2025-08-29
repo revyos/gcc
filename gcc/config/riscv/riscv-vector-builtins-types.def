@@ -377,6 +377,12 @@ along with GCC; see the file COPYING3. If not see
 #define DEF_RVV_SI_OPS(TYPE, REQUIRE)
 #endif
 
+/* Use "DEF_RVV_SF_OPS" macro include all signed integer which will be
+   iterated and registered as intrinsic functions.  */
+#ifndef DEF_RVV_SF_OPS
+#define DEF_RVV_SF_OPS(TYPE, REQUIRE)
+#endif
+
 DEF_RVV_I_OPS (vint8mf8_t, RVV_REQUIRE_MIN_VLEN_64)
 DEF_RVV_I_OPS (vint8mf4_t, 0)
 DEF_RVV_I_OPS (vint8mf2_t, 0)
@@ -1488,6 +1494,12 @@ DEF_RVV_USI_OPS (vuint32m2_t, 0)
 DEF_RVV_USI_OPS (vuint32m4_t, 0)
 DEF_RVV_USI_OPS (vuint32m8_t, 0)
 
+DEF_RVV_SF_OPS (vfloat32mf2_t, RVV_REQUIRE_ELEN_FP_32 | RVV_REQUIRE_MIN_VLEN_64)
+DEF_RVV_SF_OPS (vfloat32m1_t, RVV_REQUIRE_ELEN_FP_32)
+DEF_RVV_SF_OPS (vfloat32m2_t, RVV_REQUIRE_ELEN_FP_32)
+DEF_RVV_SF_OPS (vfloat32m4_t, RVV_REQUIRE_ELEN_FP_32)
+DEF_RVV_SF_OPS (vfloat32m8_t, RVV_REQUIRE_ELEN_FP_32)
+
 #undef DEF_RVV_I_OPS
 #undef DEF_RVV_U_OPS
 #undef DEF_RVV_F_OPS
@@ -1546,4 +1558,4 @@ DEF_RVV_USI_OPS (vuint32m8_t, 0)
 #undef DEF_RVV_DIU_OPS
 #undef DEF_RVV_USI_OPS
 #undef DEF_RVV_SI_OPS
-
+#undef DEF_RVV_SF_OPS

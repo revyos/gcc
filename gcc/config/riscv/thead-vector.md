@@ -63,6 +63,12 @@
   UNSPEC_TH_VPNCLIPU
   UNSPEC_TH_VPWADD
   UNSPEC_TH_VPWADDU
+
+  ; XTheadVsfa
+  UNSPEC_TH_VFEXP2
+  UNSPEC_TH_VFTANH
+  UNSPEC_TH_VFSIG
+  UNSPEC_TH_VFREC
 ])
 
 (define_int_iterator UNSPEC_TH_VLMEM_OP [
@@ -884,3 +890,47 @@
    (set (attr "ta") (symbol_ref "riscv_vector::get_ta(operands[6])"))
    (set (attr "ma") (symbol_ref "riscv_vector::get_ma(operands[7])"))
    (set (attr "avl_type_idx") (const_int 8))])
+
+;; XTheadVsfa
+(define_int_iterator UNSPEC_TH_VSF_IT [
+  (UNSPEC_TH_VFEXP2 "TARGET_XTHEADVSFA") (UNSPEC_TH_VFTANH "TARGET_XTHEADVSFA")
+  (UNSPEC_TH_VFSIG "TARGET_XTHEADVSFA") (UNSPEC_TH_VFREC "TARGET_XTHEADVSFA")
+])
+
+(define_int_attr xtheadvsf_insn [
+  (UNSPEC_TH_VFEXP2 "vfexp2") (UNSPEC_TH_VFTANH "vftanh")
+  (UNSPEC_TH_VFSIG "vfsig") (UNSPEC_TH_VFREC "vfrec")
+])
+
+(define_mode_iterator TH_VSF [
+  (RVVM8SF "TARGET_VECTOR_ELEN_FP_32") (RVVM4SF "TARGET_VECTOR_ELEN_FP_32")
+  (RVVM2SF "TARGET_VECTOR_ELEN_FP_32") (RVVM1SF "TARGET_VECTOR_ELEN_FP_32")
+  (RVVMF2SF "TARGET_VECTOR_ELEN_FP_32 && TARGET_MIN_VLEN > 32")
+])
+
+(define_insn "@th_pred_<xtheadvsf_insn><mode>"
+  [(set (match_operand:TH_VSF 0 "register_operand"           "=vd, vd, vr, vr")
+	(if_then_else:TH_VSF
+	  (unspec:<VM>
+	    [(match_operand:<VM> 1 "vector_mask_operand" " vm, vm,Wc1,Wc1")
+	     (match_operand 4 "vector_length_operand"    " rK, rK, rK, rK")
+	     (match_operand 5 "const_int_operand"        "  i,  i,  i,  i")
+	     (match_operand 6 "const_int_operand"        "  i,  i,  i,  i")
+	     (match_operand 7 "const_int_operand"        "  i,  i,  i,  i")
+	     (match_operand 8 "const_int_operand"        "  i,  i,  i,  i")
+	     (reg:SI VL_REGNUM)
+	     (reg:SI VTYPE_REGNUM)
+	     (reg:SI FRM_REGNUM)] UNSPEC_VPREDICATE)
+	  (unspec:TH_VSF
+	    [(match_operand:TH_VSF 3 "register_operand"       " vr, vr, vr, vr")] UNSPEC_TH_VSF_IT)
+	  (match_operand:TH_VSF 2 "vector_merge_operand"     " vu,  0, vu,  0")))]
+  "TARGET_XTHEADVSFA"
+  "th.<xtheadvsf_insn>.v\t%0,%3%p1"
+  [(set_attr "type" "vfsqrt")
+   (set_attr "mode" "<MODE>")
+   (set_attr "vl_op_idx" "4")
+   (set (attr "ta") (symbol_ref "riscv_vector::get_ta(operands[5])"))
+   (set (attr "ma") (symbol_ref "riscv_vector::get_ma(operands[6])"))
+   (set (attr "avl_type_idx") (const_int 7))
+   (set (attr "frm_mode")
+	(symbol_ref "riscv_vector::get_frm_mode (operands[8])"))])

@@ -104,4 +104,15 @@ DEF_RVV_FUNCTION (th_vpmaqaus, alu, none_m_preds, th_ui_maqa_vvvv_ops)
 DEF_RVV_FUNCTION (th_vpmaqaus, alu, none_m_preds, th_ui_maqa_vvxv_ops)
 #undef REQUIRED_EXTENSIONS
 
+#define REQUIRED_EXTENSIONS XTHEADVSFA_EXT
+DEF_RVV_FUNCTION (th_vfexp2, alu, full_preds, sf_v_ops)
+DEF_RVV_FUNCTION (th_vfexp2_frm, alu_frm, full_preds, sf_v_ops)
+DEF_RVV_FUNCTION (th_vftanh, alu, full_preds, sf_v_ops)
+DEF_RVV_FUNCTION (th_vftanh_frm, alu_frm, full_preds, sf_v_ops)
+DEF_RVV_FUNCTION (th_vfsig, alu, full_preds, sf_v_ops)
+DEF_RVV_FUNCTION (th_vfsig_frm, alu_frm, full_preds, sf_v_ops)
+DEF_RVV_FUNCTION (th_vfrec, alu, full_preds, sf_v_ops)
+DEF_RVV_FUNCTION (th_vfrec_frm, alu_frm, full_preds, sf_v_ops)
+#undef REQUIRED_EXTENSIONS
+
 #undef DEF_RVV_FUNCTION
