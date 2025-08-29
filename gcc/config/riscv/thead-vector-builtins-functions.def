@@ -67,4 +67,11 @@ DEF_RVV_FUNCTION (th_vwabau, alu, full_preds, u_wwvv_ops)
 DEF_RVV_FUNCTION (th_vwabau, alu, full_preds, th_u_wwvx_ops)
 #undef REQUIRED_EXTENSIONS
 
+#define REQUIRED_EXTENSIONS XTHEADVCRYPTO_EXT
+DEF_RVV_FUNCTION (th_vmacc54l, th_crypto, full_preds, u_vvvv_crypto_sew64_ops)
+DEF_RVV_FUNCTION (th_vmacc54l, th_crypto, full_preds, u_vvvs_crypto_sew64_ops)
+DEF_RVV_FUNCTION (th_vmacc54h, th_crypto, full_preds, u_vvvv_crypto_sew64_ops)
+DEF_RVV_FUNCTION (th_vmacc54h, th_crypto, full_preds, u_vvvs_crypto_sew64_ops)
+#undef REQUIRED_EXTENSIONS
+
 #undef DEF_RVV_FUNCTION

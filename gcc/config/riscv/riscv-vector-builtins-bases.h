@@ -363,6 +363,9 @@ extern const function_base *const th_vwabd;
 extern const function_base *const th_vwabdu;
 extern const function_base *const th_vwaba;
 extern const function_base *const th_vwabau;
+/* XTheadVcrypto */
+extern const function_base *const th_vmacc54l;
+extern const function_base *const th_vmacc54h;
 }
 
 } // end namespace riscv_vector

@@ -43,6 +43,12 @@
   UNSPEC_TH_VWABDU
   UNSPEC_TH_VWABA
   UNSPEC_TH_VWABAU
+
+  ; XTheadVcrypto
+  UNSPEC_TH_VMACC54L_VV
+  UNSPEC_TH_VMACC54H_VV
+  UNSPEC_TH_VMACC54L_VS
+  UNSPEC_TH_VMACC54H_VS
 ])
 
 (define_int_iterator UNSPEC_TH_VLMEM_OP [
@@ -642,4 +648,49 @@
    (set (attr "ta") (symbol_ref "riscv_vector::get_ta(operands[6])"))
    (set (attr "ma") (symbol_ref "riscv_vector::get_ma(operands[7])"))
    (set (attr "avl_type_idx") (const_int 8))])
+
+; XTheadVcrypto
+(define_int_iterator UNSPEC_TH_VCRYPTO_IT [
+  UNSPEC_TH_VMACC54L_VV
+  UNSPEC_TH_VMACC54H_VV
+  UNSPEC_TH_VMACC54L_VS
+  UNSPEC_TH_VMACC54H_VS
+])
+
+(define_int_attr xtheadvcrypto_insn [
+  (UNSPEC_TH_VMACC54L_VV "vmacc54l") (UNSPEC_TH_VMACC54L_VS "vmacc54l")
+  (UNSPEC_TH_VMACC54H_VV "vmacc54h") (UNSPEC_TH_VMACC54H_VS "vmacc54h")
+])
+
+(define_int_attr xtheadvcrypto_insn_suffix [
+  (UNSPEC_TH_VMACC54L_VV "vv") (UNSPEC_TH_VMACC54L_VS "vs")
+  (UNSPEC_TH_VMACC54H_VV "vv") (UNSPEC_TH_VMACC54H_VS "vs")
+])
+
+(define_insn "@th_pred_<xtheadvcrypto_insn><xtheadvcrypto_insn_suffix><mode>"
+  [(set (match_operand:VI_D 0 "register_operand"           "=vd, vr")
+  (if_then_else:VI_D
+    (unspec:<VM>
+      [(match_operand:<VM> 1 "vector_mask_operand" " vm,  Wc1")
+      (match_operand 5 "vector_length_operand"    " rK,  rK")
+      (match_operand 6 "const_int_operand"        "  i,   i")
+      (match_operand 7 "const_int_operand"        "  i,   i")
+      (match_operand 8 "const_int_operand"        "  i,   i")
+      (reg:SI VL_REGNUM)
+      (reg:SI VTYPE_REGNUM)] UNSPEC_TH_VCRYPTO_IT)
+    (plus:VI_D
+      (mult:VI_D
+        (match_operand:VI_D 2 "register_operand"     " vr,  vr")
+        (match_operand:VI_D 3 "register_operand"     " vr,  vr"))
+      (match_operand:VI_D 4 "register_operand"       "  0,   0"))
+    (match_dup 4)))]
+  "TARGET_VECTOR && TARGET_XTHEADVCRYPTO"
+  "th.<xtheadvcrypto_insn>.<xtheadvcrypto_insn_suffix>\t%0,%2,%3%p1"
+  [(set_attr "type" "vimuladd")
+  (set_attr "mode" "<MODE>")
+  (set_attr "merge_op_idx" "4")
+  (set_attr "vl_op_idx" "5")
+  (set (attr "ta") (symbol_ref "riscv_vector::get_ta(operands[6])"))
+  (set (attr "ma") (symbol_ref "riscv_vector::get_ma(operands[7])"))
+  (set (attr "avl_type_idx") (const_int 8))])
 
