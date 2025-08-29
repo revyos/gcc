@@ -44,4 +44,27 @@ DEF_RVV_FUNCTION (th_vcrcfoldr, alu, none_tu_preds, th_diu_vvvv_ops)
 DEF_RVV_FUNCTION (th_vcrcfoldn, alu, none_tu_preds, th_diu_vvvv_ops)
 #undef REQUIRED_EXTENSIONS
 
+#define REQUIRED_EXTENSIONS XTHEADVCODER_EXT
+DEF_RVV_FUNCTION (th_vabd, th_alu_u, full_preds, th_i_vvv_u_ops)
+DEF_RVV_FUNCTION (th_vabd, th_alu_u, full_preds, th_i_vvx_u_ops)
+DEF_RVV_FUNCTION (th_vabdu, alu, full_preds, u_vvv_ops)
+DEF_RVV_FUNCTION (th_vabdu, alu, full_preds, u_vvx_ops)
+DEF_RVV_FUNCTION (th_vaba, th_alu_u, full_preds, th_i_vvvv_u_ops)
+DEF_RVV_FUNCTION (th_vaba, th_alu_u, full_preds, th_i_vvvx_u_ops)
+DEF_RVV_FUNCTION (th_vabau, alu, full_preds, th_u_vvvv_ops)
+DEF_RVV_FUNCTION (th_vabau, alu, full_preds, th_u_vvvx_ops)
+DEF_RVV_FUNCTION (th_vfabd, alu, full_preds, f_vvv_ops)
+DEF_RVV_FUNCTION (th_vfabd, alu, full_preds, f_vvf_ops)
+DEF_RVV_FUNCTION (th_vfabd_frm, alu_frm, full_preds, f_vvv_ops)
+DEF_RVV_FUNCTION (th_vfabd_frm, alu_frm, full_preds, f_vvf_ops)
+DEF_RVV_FUNCTION (th_vwabd, th_alu_u, full_preds, th_i_wvv_u_ops)
+DEF_RVV_FUNCTION (th_vwabd, th_alu_u, full_preds, th_i_wvx_u_ops)
+DEF_RVV_FUNCTION (th_vwabdu, alu, full_preds, u_wvv_ops)
+DEF_RVV_FUNCTION (th_vwabdu, alu, full_preds, u_wvx_ops)
+DEF_RVV_FUNCTION (th_vwaba, th_alu_u, full_preds, th_i_wwvv_u_ops)
+DEF_RVV_FUNCTION (th_vwaba, th_alu_u, full_preds, th_i_wwvx_u_ops)
+DEF_RVV_FUNCTION (th_vwabau, alu, full_preds, u_wwvv_ops)
+DEF_RVV_FUNCTION (th_vwabau, alu, full_preds, th_u_wwvx_ops)
+#undef REQUIRED_EXTENSIONS
+
 #undef DEF_RVV_FUNCTION

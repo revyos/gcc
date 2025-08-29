@@ -352,6 +352,17 @@ extern const function_base *const th_vilo;
 extern const function_base *const th_vile;
 extern const function_base *const th_vcrcfoldr;
 extern const function_base *const th_vcrcfoldn;
+/* XTheadVcoder */
+extern const function_base *const th_vabd;
+extern const function_base *const th_vabdu;
+extern const function_base *const th_vaba;
+extern const function_base *const th_vabau;
+extern const function_base *const th_vfabd;
+extern const function_base *const th_vfabd_frm;
+extern const function_base *const th_vwabd;
+extern const function_base *const th_vwabdu;
+extern const function_base *const th_vwaba;
+extern const function_base *const th_vwabau;
 }
 
 } // end namespace riscv_vector
