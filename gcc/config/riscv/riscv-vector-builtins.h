@@ -124,6 +124,7 @@ enum required_ext
   ZVKNHB_EXT,		/* Crypto vector Zvknhb sub-ext */
   ZVKSED_EXT,		/* Crypto vector Zvksed sub-ext */
   ZVKSH_EXT,		/* Crypto vector Zvksh sub-ext */
+  XTHEADVARITH_EXT,	/* Xtheadvarith extension */
   XTHEADVECTOR_EXT,	/* XTheadVector extension */
   ZVFBFMIN_EXT,		/* Zvfbfmin externsion */
   ZVFBFWMA_EXT,		/* Zvfbfwma extension */
@@ -154,6 +155,8 @@ static inline const char * reqired_ext_to_isa_name (enum required_ext required)
       return "zvksed";
     case ZVKSH_EXT:
       return "zvksh";
+    case XTHEADVARITH_EXT:
+      return "xtheadvarith";
     case XTHEADVECTOR_EXT:
       return "xthreadvector";
     case ZVFBFMIN_EXT:
@@ -191,6 +194,8 @@ static inline bool required_extensions_specified (enum required_ext required)
       return TARGET_ZVKSED;
     case ZVKSH_EXT:
       return TARGET_ZVKSH;
+    case XTHEADVARITH_EXT:
+      return TARGET_XTHEADVARITH;
     case XTHEADVECTOR_EXT:
       return TARGET_XTHEADVECTOR;
     case ZVFBFMIN_EXT:
@@ -331,6 +336,8 @@ struct function_group_info
         return TARGET_ZVKSED;
       case ZVKSH_EXT:
         return TARGET_ZVKSH;
+      case XTHEADVARITH_EXT:
+	return TARGET_XTHEADVARITH;
       case XTHEADVECTOR_EXT:
 	return TARGET_XTHEADVECTOR;
       case ZVFBFMIN_EXT:

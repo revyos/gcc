@@ -227,6 +227,8 @@ static const riscv_implied_info_t riscv_implied_info[] =
   {"ssstateen", "zicsr"},
   {"sstc", "zicsr"},
 
+  {"xtheadvarith", "v"},
+
   {NULL, NULL}
 };
 
@@ -431,6 +433,7 @@ static const struct riscv_ext_version riscv_ext_version_table[] =
   {"xtheadmemidx", ISA_SPEC_CLASS_NONE, 1, 0},
   {"xtheadmempair", ISA_SPEC_CLASS_NONE, 1, 0},
   {"xtheadsync", ISA_SPEC_CLASS_NONE, 1, 0},
+  {"xtheadvarith", ISA_SPEC_CLASS_NONE, 0, 1},
   {"xtheadvector", ISA_SPEC_CLASS_NONE, 1, 0},
 
   {"xventanacondops", ISA_SPEC_CLASS_NONE, 1, 0},
@@ -1748,6 +1751,7 @@ static const riscv_ext_flag_table_t riscv_ext_flag_table[] =
   RISCV_EXT_FLAG_ENTRY ("xtheadmemidx",  x_riscv_xthead_subext, MASK_XTHEADMEMIDX),
   RISCV_EXT_FLAG_ENTRY ("xtheadmempair", x_riscv_xthead_subext, MASK_XTHEADMEMPAIR),
   RISCV_EXT_FLAG_ENTRY ("xtheadsync",    x_riscv_xthead_subext, MASK_XTHEADSYNC),
+  RISCV_EXT_FLAG_ENTRY ("xtheadvarith",  x_riscv_xthead_subext, MASK_XTHEADVARITH),
   RISCV_EXT_FLAG_ENTRY ("xtheadvector",  x_riscv_xthead_subext, MASK_XTHEADVECTOR),
   RISCV_EXT_FLAG_ENTRY ("xtheadvector",  x_riscv_vector_elen_flags, MASK_VECTOR_ELEN_32),
   RISCV_EXT_FLAG_ENTRY ("xtheadvector",  x_riscv_vector_elen_flags, MASK_VECTOR_ELEN_64),
