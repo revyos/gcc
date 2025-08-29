@@ -232,6 +232,7 @@ static const riscv_implied_info_t riscv_implied_info[] =
   {"xtheadvcrypto", "v"},
   {"xtheadvdot", "v"},
   {"xtheadvsfa", "v"},
+  {"xtheadvsfb", "v"},
 
   {NULL, NULL}
 };
@@ -443,6 +444,7 @@ static const struct riscv_ext_version riscv_ext_version_table[] =
   {"xtheadvdot", ISA_SPEC_CLASS_NONE, 1, 0},
   {"xtheadvector", ISA_SPEC_CLASS_NONE, 1, 0},
   {"xtheadvsfa", ISA_SPEC_CLASS_NONE, 0, 2},
+  {"xtheadvsfb", ISA_SPEC_CLASS_NONE, 0, 2},
 
   {"xventanacondops", ISA_SPEC_CLASS_NONE, 1, 0},
 
@@ -1777,6 +1779,7 @@ static const riscv_ext_flag_table_t riscv_ext_flag_table[] =
   RISCV_EXT_FLAG_ENTRY ("xtheadvector",  x_target_flags, MASK_FULL_V),
   RISCV_EXT_FLAG_ENTRY ("xtheadvector",  x_target_flags, MASK_VECTOR),
   RISCV_EXT_FLAG_ENTRY ("xtheadvsfa",    x_riscv_xthead_subext, MASK_XTHEADVSFA),
+  RISCV_EXT_FLAG_ENTRY ("xtheadvsfb",    x_riscv_xthead_subext, MASK_XTHEADVSFB),
 
   RISCV_EXT_FLAG_ENTRY ("xventanacondops", x_riscv_xventana_subext, MASK_XVENTANACONDOPS),
 

@@ -115,4 +115,11 @@ DEF_RVV_FUNCTION (th_vfrec, alu, full_preds, sf_v_ops)
 DEF_RVV_FUNCTION (th_vfrec_frm, alu_frm, full_preds, sf_v_ops)
 #undef REQUIRED_EXTENSIONS
 
+#define REQUIRED_EXTENSIONS XTHEADVSFB_EXT
+DEF_RVV_FUNCTION (th_vfsin, alu, full_preds, sf_v_ops)
+DEF_RVV_FUNCTION (th_vfsin_frm, alu_frm, full_preds, sf_v_ops)
+DEF_RVV_FUNCTION (th_vfcos, alu, full_preds, sf_v_ops)
+DEF_RVV_FUNCTION (th_vfcos_frm, alu_frm, full_preds, sf_v_ops)
+#undef REQUIRED_EXTENSIONS
+
 #undef DEF_RVV_FUNCTION

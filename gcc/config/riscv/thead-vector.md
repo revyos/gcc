@@ -69,6 +69,10 @@
   UNSPEC_TH_VFTANH
   UNSPEC_TH_VFSIG
   UNSPEC_TH_VFREC
+
+  ; XTheadVsfb
+  UNSPEC_TH_VFSIN
+  UNSPEC_TH_VFCOS
 ])
 
 (define_int_iterator UNSPEC_TH_VLMEM_OP [
@@ -891,15 +895,17 @@
    (set (attr "ma") (symbol_ref "riscv_vector::get_ma(operands[7])"))
    (set (attr "avl_type_idx") (const_int 8))])
 
-;; XTheadVsfa
+;; XTheadVsfa  && XTheadVsfb
 (define_int_iterator UNSPEC_TH_VSF_IT [
   (UNSPEC_TH_VFEXP2 "TARGET_XTHEADVSFA") (UNSPEC_TH_VFTANH "TARGET_XTHEADVSFA")
   (UNSPEC_TH_VFSIG "TARGET_XTHEADVSFA") (UNSPEC_TH_VFREC "TARGET_XTHEADVSFA")
+  (UNSPEC_TH_VFSIN "TARGET_XTHEADVSFB") (UNSPEC_TH_VFCOS "TARGET_XTHEADVSFB")
 ])
 
 (define_int_attr xtheadvsf_insn [
   (UNSPEC_TH_VFEXP2 "vfexp2") (UNSPEC_TH_VFTANH "vftanh")
   (UNSPEC_TH_VFSIG "vfsig") (UNSPEC_TH_VFREC "vfrec")
+  (UNSPEC_TH_VFSIN "vfsin") (UNSPEC_TH_VFCOS "vfcos")
 ])
 
 (define_mode_iterator TH_VSF [
@@ -924,7 +930,7 @@
 	  (unspec:TH_VSF
 	    [(match_operand:TH_VSF 3 "register_operand"       " vr, vr, vr, vr")] UNSPEC_TH_VSF_IT)
 	  (match_operand:TH_VSF 2 "vector_merge_operand"     " vu,  0, vu,  0")))]
-  "TARGET_XTHEADVSFA"
+  "TARGET_XTHEADVSFA || TARGET_XTHEADVSFB"
   "th.<xtheadvsf_insn>.v\t%0,%3%p1"
   [(set_attr "type" "vfsqrt")
    (set_attr "mode" "<MODE>")
