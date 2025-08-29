@@ -49,6 +49,20 @@
   UNSPEC_TH_VMACC54H_VV
   UNSPEC_TH_VMACC54L_VS
   UNSPEC_TH_VMACC54H_VS
+
+  ; XTheadVdot
+  UNSPEC_TH_VMAQA
+  UNSPEC_TH_VMAQAU
+  UNSPEC_TH_VMAQASU
+  UNSPEC_TH_VMAQAUS
+  UNSPEC_TH_VPMAQA
+  UNSPEC_TH_VPMAQAU
+  UNSPEC_TH_VPMAQASU
+  UNSPEC_TH_VPMAQAUS
+  UNSPEC_TH_VPNCLIP
+  UNSPEC_TH_VPNCLIPU
+  UNSPEC_TH_VPWADD
+  UNSPEC_TH_VPWADDU
 ])
 
 (define_int_iterator UNSPEC_TH_VLMEM_OP [
@@ -694,3 +708,179 @@
   (set (attr "ma") (symbol_ref "riscv_vector::get_ma(operands[7])"))
   (set (attr "avl_type_idx") (const_int 8))])
 
+;; XTheadVdot
+(define_int_iterator UNSPEC_TH_VPCLIP_IT [UNSPEC_TH_VPNCLIP UNSPEC_TH_VPNCLIPU])
+
+(define_int_iterator UNSPEC_TH_WPWADD_IT [UNSPEC_TH_VPWADD UNSPEC_TH_VPWADDU])
+
+(define_int_iterator UNSPEC_TH_VMAQA_AND_VPMAQA_ITERATOR [
+        UNSPEC_TH_VMAQA    UNSPEC_TH_VMAQAU
+	UNSPEC_TH_VMAQASU  UNSPEC_TH_VMAQAUS
+	UNSPEC_TH_VPMAQA   UNSPEC_TH_VPMAQAU
+	UNSPEC_TH_VPMAQASU  UNSPEC_TH_VPMAQAUS])
+
+(define_int_attr xtheadvdot_insn [
+        (UNSPEC_TH_VPNCLIP "vpnclip") (UNSPEC_TH_VPNCLIPU "vpnclipu")
+        (UNSPEC_TH_VPWADD "vpwadd") (UNSPEC_TH_VPWADDU "vpwaddu")
+        (UNSPEC_TH_VMAQA "vmaqa") (UNSPEC_TH_VMAQAU "vmaqau")
+	(UNSPEC_TH_VMAQASU "vmaqasu") (UNSPEC_TH_VMAQAUS "vmaqaus")
+	(UNSPEC_TH_VPMAQA "vpmaqa") (UNSPEC_TH_VPMAQAU "vpmaqau")
+	(UNSPEC_TH_VPMAQASU "vpmaqasu") (UNSPEC_TH_VPMAQAUS "vpmaqaus")])
+
+(define_mode_iterator VI_H [
+  RVVM8HI RVVM4HI RVVM2HI RVVM1HI RVVMF2HI (RVVMF4HI "TARGET_MIN_VLEN > 32")
+])
+
+(define_mode_attr TH_VODT_VI_B [
+  (RVVM8SI "RVVM1BI") (RVVM4SI "RVVMF2BI") (RVVM2SI "RVVMF4BI") (RVVM1SI "RVVMF8BI") (RVVMF2SI "RVVMF16BI")
+])
+
+(define_mode_attr TH_VODT_VI_Q [
+  (RVVM8SI "RVVM8QI") (RVVM4SI "RVVM4QI") (RVVM2SI "RVVM2QI") (RVVM1SI "RVVM1QI") (RVVMF2SI "RVVMF2QI")
+])
+
+(define_insn "@th_pred_<xtheadvdot_insn><mode>"
+  [(set (match_operand:<V_DOUBLE_TRUNC> 0 "register_operand"           "=&vd,vd, vr, vr,vd, vr,  vr,  vr")
+	(if_then_else:<V_DOUBLE_TRUNC>
+	  (unspec:<VM>
+	    [(match_operand:<VM> 1 "vector_mask_operand"               " vm,vm,Wc1,Wc1,vm,Wc1,vmWc1,vmWc1")
+	     (match_operand 5 "vector_length_operand"                  " rK,rK, rK, rK,rK, rK,   rK,   rK")
+	     (match_operand 6 "const_int_operand"                      "  i, i,  i,  i, i,  i,    i,    i")
+	     (match_operand 7 "const_int_operand"                      "  i, i,  i,  i, i,  i,    i,    i")
+	     (match_operand 8 "const_int_operand"                      "  i, i,  i,  i, i,  i,    i,    i")
+	     (match_operand 9 "const_int_operand"                      "  i, i,  i,  i, i,  i,    i,    i")
+	     (reg:SI VL_REGNUM)
+	     (reg:SI VTYPE_REGNUM)
+	     (reg:SI VXRM_REGNUM)] UNSPEC_VPREDICATE)
+	  (unspec:<V_DOUBLE_TRUNC>
+	    [(match_operand:VI_H 3 "register_operand"         " vr,vr, vr, vr, 0,  0,   vr,   vr")
+	     (match_operand:<V_DOUBLE_TRUNC> 4 "register_operand"      "  0, 0,  0,  0,vr, vr,   vr,   vr")] UNSPEC_TH_VPCLIP_IT)
+	  (match_operand:<V_DOUBLE_TRUNC> 2 "vector_merge_operand"     "  0,vu,  0, vu,vu, vu,   vu,    0")))]
+  "TARGET_VECTOR && TARGET_XTHEADVDOT"
+  "th.<xtheadvdot_insn>.w%o4\t%0,%3,%v4%p1"
+  [(set_attr "type" "vnclip")
+   (set_attr "mode" "<V_DOUBLE_TRUNC>")])
+
+(define_insn "@th_pred_<xtheadvdot_insn><mode>_scalar"
+  [(set (match_operand:<V_DOUBLE_TRUNC> 0 "register_operand"           "=&vd, vd, vr, vr,  vr,  vr")
+	(if_then_else:<V_DOUBLE_TRUNC>
+	  (unspec:<VM>
+	    [(match_operand:<VM> 1 "vector_mask_operand"               " vm, vm,Wc1,Wc1,vmWc1,vmWc1")
+	     (match_operand 5 "vector_length_operand"                  " rK, rK, rK, rK,   rK,   rK")
+	     (match_operand 6 "const_int_operand"                      "  i,  i,  i,  i,    i,    i")
+	     (match_operand 7 "const_int_operand"                      "  i,  i,  i,  i,    i,    i")
+	     (match_operand 8 "const_int_operand"                      "  i,  i,  i,  i,    i,    i")
+	     (match_operand 9 "const_int_operand"                      "  i,  i,  i,  i,    i,    i")
+	     (reg:SI VL_REGNUM)
+	     (reg:SI VTYPE_REGNUM)
+	     (reg:SI VXRM_REGNUM)] UNSPEC_VPREDICATE)
+	  (unspec:<V_DOUBLE_TRUNC>
+	    [(match_operand:VI_H 3 "register_operand"         "  0,  0,  0,  0,   vr,   vr")
+	     (match_operand 4 "pmode_register_operand"                 "  r,  r,  r,  r,    r,    r")] UNSPEC_TH_VPCLIP_IT)
+	  (match_operand:<V_DOUBLE_TRUNC> 2 "vector_merge_operand"     " vu,  0, vu,  0,   vu,    0")))]
+  "TARGET_VECTOR && TARGET_XTHEADVDOT"
+  "th.<xtheadvdot_insn>.w%o4\t%0,%3,%4%p1"
+  [(set_attr "type" "vnclip")
+   (set_attr "mode" "<V_DOUBLE_TRUNC>")])
+
+(define_insn "@th_pred_<xtheadvdot_insn><mode>"
+  [(set (match_operand:VI_H 0 "register_operand"           "=&vd,vd")
+	(if_then_else:VI_H
+	  (unspec:<VM>
+	    [(match_operand:<VM> 1 "vector_mask_operand" " vmWc1,vmWc1")
+	     (match_operand 5 "vector_length_operand"    " rK,rK")
+	     (match_operand 6 "const_int_operand"        "  i, i")
+	     (match_operand 7 "const_int_operand"        "  i, i")
+	     (match_operand 8 "const_int_operand"        "  i, i")
+	     (reg:SI VL_REGNUM)
+	     (reg:SI VTYPE_REGNUM)] UNSPEC_VPREDICATE)
+          (unspec:VI_H
+	    [(match_operand:<V_DOUBLE_TRUNC> 3 "register_operand"	" vr,vr")
+             (match_operand:<V_DOUBLE_TRUNC> 4 "register_operand"	" vr,vr")] UNSPEC_TH_WPWADD_IT)
+	  (match_operand:VI_H 2 "vector_merge_operand"     "")))]
+  "TARGET_VECTOR && TARGET_XTHEADVDOT"
+  "th.<xtheadvdot_insn>.v%o4\t%0,%3,%4%p1"
+  [(set_attr "type" "viwalu")
+   (set_attr "mode" "<V_DOUBLE_TRUNC>")
+   (set_attr "merge_op_idx" "2")
+   (set_attr "vl_op_idx" "5")
+   (set (attr "ta") (symbol_ref "riscv_vector::get_ta(operands[6])"))
+   (set (attr "ma") (symbol_ref "riscv_vector::get_ma(operands[7])"))
+   (set (attr "avl_type_idx") (const_int 8))])
+
+(define_insn "@th_pred_<xtheadvdot_insn><mode>_scalar"
+  [(set (match_operand:VI_H 0 "register_operand"           "=&vd,vd")
+	(if_then_else:VI_H
+	  (unspec:<VM>
+	    [(match_operand:<VM> 1 "vector_mask_operand" " vmWc1,vmWc1")
+	     (match_operand 5 "vector_length_operand"    " rK,rK")
+	     (match_operand 6 "const_int_operand"        "  i, i")
+	     (match_operand 7 "const_int_operand"        "  i, i")
+	     (match_operand 8 "const_int_operand"        "  i, i")
+	     (reg:SI VL_REGNUM)
+	     (reg:SI VTYPE_REGNUM)] UNSPEC_VPREDICATE)
+          (unspec:VI_H
+	    [(match_operand:<V_DOUBLE_TRUNC> 3 "register_operand"	" vr,vr")
+             (match_operand:QI 4 "register_operand"	"  r, r")] UNSPEC_TH_WPWADD_IT)
+	  (match_operand:VI_H 2 "vector_merge_operand"     "")))]
+  "TARGET_VECTOR && TARGET_XTHEADVDOT"
+  "th.<xtheadvdot_insn>.v%o4\t%0,%3,%4%p1"
+  [(set_attr "type" "viwalu")
+   (set_attr "mode" "<V_DOUBLE_TRUNC>")
+   (set_attr "merge_op_idx" "2")
+   (set_attr "vl_op_idx" "5")
+   (set (attr "ta") (symbol_ref "riscv_vector::get_ta(operands[6])"))
+   (set (attr "ma") (symbol_ref "riscv_vector::get_ma(operands[7])"))
+   (set (attr "avl_type_idx") (const_int 8))])
+
+(define_insn "@th_pred_<xtheadvdot_insn><mode>"
+  [(set (match_operand:VSI 0 "register_operand"           "=&vd,vd")
+	(if_then_else:VSI
+	  (unspec:<TH_VODT_VI_B>
+	    [(match_operand:<TH_VODT_VI_B> 1 "vector_mask_operand" " vmWc1,vmWc1")
+	     (match_operand 5 "vector_length_operand"    " rK,rK")
+	     (match_operand 6 "const_int_operand"        "  i, i")
+	     (match_operand 7 "const_int_operand"        "  i, i")
+	     (match_operand 8 "const_int_operand"        "  i, i")
+	     (reg:SI VL_REGNUM)
+	     (reg:SI VTYPE_REGNUM)] UNSPEC_VPREDICATE)
+          (unspec:VSI
+	    [(match_operand:VSI 2 "register_operand"	"  0, 0")
+	     (match_operand:<TH_VODT_VI_Q> 3 "register_operand"	" vr,vr")
+             (match_operand:<TH_VODT_VI_Q> 4 "register_operand"	" vr,vr")] UNSPEC_TH_VMAQA_AND_VPMAQA_ITERATOR)
+	  (match_dup 2)))]
+  "TARGET_VECTOR && TARGET_XTHEADVDOT"
+  "th.<xtheadvdot_insn>.v%o3\t%0,%3,%4%p1"
+  [(set_attr "type" "vimuladd")
+   (set_attr "mode" "<MODE>")
+   (set_attr "merge_op_idx" "2")
+   (set_attr "vl_op_idx" "5")
+   (set (attr "ta") (symbol_ref "riscv_vector::get_ta(operands[6])"))
+   (set (attr "ma") (symbol_ref "riscv_vector::get_ma(operands[7])"))
+   (set (attr "avl_type_idx") (const_int 8))])
+
+(define_insn "@th_pred_<xtheadvdot_insn><mode>_scalar"
+  [(set (match_operand:VSI 0 "register_operand"           "=&vd,vd")
+	(if_then_else:VSI
+	  (unspec:<TH_VODT_VI_B>
+	    [(match_operand:<TH_VODT_VI_B> 1 "vector_mask_operand" " vmWc1,vmWc1")
+	     (match_operand 5 "vector_length_operand"    " rK,rK")
+	     (match_operand 6 "const_int_operand"        "  i, i")
+	     (match_operand 7 "const_int_operand"        "  i, i")
+	     (match_operand 8 "const_int_operand"        "  i, i")
+	     (reg:SI VL_REGNUM)
+	     (reg:SI VTYPE_REGNUM)] UNSPEC_VPREDICATE)
+          (unspec:VSI
+	    [(match_operand:VSI 2 "register_operand"	"  0, 0")
+	     (match_operand:SI 3 "register_operand"	" r, r")
+             (match_operand:<TH_VODT_VI_Q> 4 "register_operand"	" vr,vr")] UNSPEC_TH_VMAQA_AND_VPMAQA_ITERATOR)
+	  (match_dup 2)))]
+  "TARGET_VECTOR && TARGET_XTHEADVDOT"
+  "th.<xtheadvdot_insn>.v%o3\t%0,%3,%4%p1"
+  [(set_attr "type" "vimuladd")
+   (set_attr "mode" "<MODE>")
+   (set_attr "merge_op_idx" "2")
+   (set_attr "vl_op_idx" "5")
+   (set (attr "ta") (symbol_ref "riscv_vector::get_ta(operands[6])"))
+   (set (attr "ma") (symbol_ref "riscv_vector::get_ma(operands[7])"))
+   (set (attr "avl_type_idx") (const_int 8))])

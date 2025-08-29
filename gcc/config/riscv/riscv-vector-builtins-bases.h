@@ -366,6 +366,19 @@ extern const function_base *const th_vwabau;
 /* XTheadVcrypto */
 extern const function_base *const th_vmacc54l;
 extern const function_base *const th_vmacc54h;
+/* XTheadVdot */
+extern const function_base *const th_vpnclip;
+extern const function_base *const th_vpnclipu;
+extern const function_base *const th_vpwadd;
+extern const function_base *const th_vpwaddu;
+extern const function_base *const th_vmaqa;
+extern const function_base *const th_vmaqau;
+extern const function_base *const th_vmaqasu;
+extern const function_base *const th_vmaqaus;
+extern const function_base *const th_vpmaqa;
+extern const function_base *const th_vpmaqau;
+extern const function_base *const th_vpmaqasu;
+extern const function_base *const th_vpmaqaus;
 }
 
 } // end namespace riscv_vector
