@@ -388,6 +388,11 @@ extern const function_base *const th_vfsig;
 extern const function_base *const th_vfsig_frm;
 extern const function_base *const th_vfrec;
 extern const function_base *const th_vfrec_frm;
+/* XTheadVsfb */
+extern const function_base *const th_vfsin;
+extern const function_base *const th_vfsin_frm;
+extern const function_base *const th_vfcos;
+extern const function_base *const th_vfcos_frm;
 }
 
 } // end namespace riscv_vector
