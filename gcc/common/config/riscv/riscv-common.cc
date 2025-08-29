@@ -421,6 +421,7 @@ static const struct riscv_ext_version riscv_ext_version_table[] =
   {"xtheadba", ISA_SPEC_CLASS_NONE, 1, 0},
   {"xtheadbb", ISA_SPEC_CLASS_NONE, 1, 0},
   {"xtheadbs", ISA_SPEC_CLASS_NONE, 1, 0},
+  {"xtheadcbop", ISA_SPEC_CLASS_NONE, 0, 1}, 
   {"xtheadcmo", ISA_SPEC_CLASS_NONE, 1, 0},
   {"xtheadcondmov", ISA_SPEC_CLASS_NONE, 1, 0},
   {"xtheadfmemidx", ISA_SPEC_CLASS_NONE, 1, 0},
