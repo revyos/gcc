@@ -2329,6 +2329,55 @@ public:
   }
 };
 
+/* XTheadVdot */
+/* Implements th_vpnclip/th_vpnclipu/th_vpwadd/th_vpwaddu.  */
+template<int UNSPEC>
+class th_pack : public function_base
+{
+public:
+  rtx expand (function_expander &e) const override
+  {
+    switch (e.op_info->op)
+      {
+      case OP_TYPE_vx:
+      case OP_TYPE_wx:
+	return e.use_exact_insn (
+	  code_for_th_pred_scalar (UNSPEC, e.vector_mode ()));
+      case OP_TYPE_vv:
+      case OP_TYPE_wv:
+	return e.use_exact_insn (
+	  code_for_th_pred (UNSPEC, e.vector_mode ()));
+      default:
+	gcc_unreachable ();
+      }
+  }
+};
+
+/* Implements th_vmaqa/th_vmaqau/th_vmaqasu/th_vmaqaus/th_vpmaqa/th_vpmaqau
+   th_vpmaqasu/th_vpmaqaus.  */
+template<int UNSPEC>
+class th_maqa : public function_base
+{
+public:
+  bool has_merge_operand_p () const override { return false; }
+  rvv_base_type get_mask_type () const override { return RVV_BASE_maqa_mask; }
+
+  rtx expand (function_expander &e) const override
+  {
+    switch (e.op_info->op)
+      {
+      case OP_TYPE_vx:
+	return e.use_exact_insn (
+	  code_for_th_pred_scalar (UNSPEC, e.vector_mode ()));
+      case OP_TYPE_vv:
+	return e.use_exact_insn (
+	  code_for_th_pred (UNSPEC, e.vector_mode ()));
+      default:
+	gcc_unreachable ();
+      }
+  }
+};
+
 /* Below implements are vector crypto */
 /* Implements vandn.[vv,vx] */
 class vandn : public function_base
@@ -2896,6 +2945,19 @@ static CONSTEXPR const th_vcoder<UNSPEC_TH_VWABAU, false> th_vwabau_obj;
 /* XTheadVcrypto */
 static CONSTEXPR const th_vcrypto<false> th_vmacc54l_obj;
 static CONSTEXPR const th_vcrypto<true> th_vmacc54h_obj;
+/* XTheadVdot */
+static CONSTEXPR const th_pack<UNSPEC_TH_VPNCLIP> th_vpnclip_obj;
+static CONSTEXPR const th_pack<UNSPEC_TH_VPNCLIPU> th_vpnclipu_obj;
+static CONSTEXPR const th_pack<UNSPEC_TH_VPWADD> th_vpwadd_obj;
+static CONSTEXPR const th_pack<UNSPEC_TH_VPWADDU> th_vpwaddu_obj;
+static CONSTEXPR const th_maqa<UNSPEC_TH_VMAQA> th_vmaqa_obj;
+static CONSTEXPR const th_maqa<UNSPEC_TH_VMAQAU> th_vmaqau_obj;
+static CONSTEXPR const th_maqa<UNSPEC_TH_VMAQASU> th_vmaqasu_obj;
+static CONSTEXPR const th_maqa<UNSPEC_TH_VMAQAUS> th_vmaqaus_obj;
+static CONSTEXPR const th_maqa<UNSPEC_TH_VPMAQA> th_vpmaqa_obj;
+static CONSTEXPR const th_maqa<UNSPEC_TH_VPMAQAU> th_vpmaqau_obj;
+static CONSTEXPR const th_maqa<UNSPEC_TH_VPMAQASU> th_vpmaqasu_obj;
+static CONSTEXPR const th_maqa<UNSPEC_TH_VPMAQAUS> th_vpmaqaus_obj;
 
 /* Crypto Vector */
 static CONSTEXPR const vandn vandn_obj;
@@ -3281,4 +3343,17 @@ BASE (th_vwabau)
 /* XTheadVcrypto */
 BASE (th_vmacc54l)
 BASE (th_vmacc54h)
+/* XTheadVdot */
+BASE (th_vpnclip)
+BASE (th_vpnclipu)
+BASE (th_vpwadd)
+BASE (th_vpwaddu)
+BASE (th_vmaqa)
+BASE (th_vmaqau)
+BASE (th_vmaqasu)
+BASE (th_vmaqaus)
+BASE (th_vpmaqa)
+BASE (th_vpmaqau)
+BASE (th_vpmaqasu)
+BASE (th_vpmaqaus)
 } // end namespace riscv_vector

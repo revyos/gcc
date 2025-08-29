@@ -127,6 +127,7 @@ enum required_ext
   XTHEADVARITH_EXT,	/* Xtheadvarith extension */
   XTHEADVCODER_EXT,	/* Xtheadvcoder extension */
   XTHEADVCRYPTO_EXT,	/* Xtheadvcrypto extension */
+  XTHEADVDOT_EXT,	/* Xtheadvdot extension */
   XTHEADVECTOR_EXT,	/* XTheadVector extension */
   ZVFBFMIN_EXT,		/* Zvfbfmin externsion */
   ZVFBFWMA_EXT,		/* Zvfbfwma extension */
@@ -163,6 +164,8 @@ static inline const char * reqired_ext_to_isa_name (enum required_ext required)
       return "xtheadvcoder";
     case XTHEADVCRYPTO_EXT:
       return "xtheadvcrypto";
+    case XTHEADVDOT_EXT:
+      return "xtheadvdot";
     case XTHEADVECTOR_EXT:
       return "xthreadvector";
     case ZVFBFMIN_EXT:
@@ -206,6 +209,8 @@ static inline bool required_extensions_specified (enum required_ext required)
       return TARGET_XTHEADVCODER;
     case XTHEADVCRYPTO_EXT:
       return TARGET_XTHEADVCRYPTO;
+    case XTHEADVDOT_EXT:
+      return TARGET_XTHEADVDOT;
     case XTHEADVECTOR_EXT:
       return TARGET_XTHEADVECTOR;
     case ZVFBFMIN_EXT:
@@ -352,6 +357,8 @@ struct function_group_info
 	return TARGET_XTHEADVCODER;
       case XTHEADVCRYPTO_EXT:
 	return TARGET_XTHEADVCRYPTO;
+      case XTHEADVDOT_EXT:
+	return TARGET_XTHEADVDOT;
       case XTHEADVECTOR_EXT:
 	return TARGET_XTHEADVECTOR;
       case ZVFBFMIN_EXT:
@@ -517,6 +524,7 @@ public:
   machine_mode index_mode (void) const;
   machine_mode arg_mode (int) const;
   machine_mode mask_mode (void) const;
+  machine_mode mask_mode (rvv_base_type) const;
   machine_mode ret_mode (void) const;
 
   rtx use_exact_insn (insn_code);
@@ -555,6 +563,9 @@ public:
 
   /* Return true if intrinsics should apply vl operand.  */
   virtual bool apply_vl_p () const;
+
+  /* Return the mask type for function.  */
+  virtual rvv_base_type get_mask_type () const;
 
   /* Return true if intrinsics should apply tail policy operand.  */
   virtual bool apply_tail_policy_p () const;
@@ -795,6 +806,13 @@ inline bool
 function_base::apply_vl_p () const
 {
   return true;
+}
+
+/* Return the mask type for function.  */
+inline rvv_base_type
+function_base::get_mask_type () const
+{
+  return RVV_BASE_mask;
 }
 
 /* We choose to apply tail policy operand by default since most of the

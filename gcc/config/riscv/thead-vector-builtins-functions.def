@@ -74,4 +74,34 @@ DEF_RVV_FUNCTION (th_vmacc54h, th_crypto, full_preds, u_vvvv_crypto_sew64_ops)
 DEF_RVV_FUNCTION (th_vmacc54h, th_crypto, full_preds, u_vvvs_crypto_sew64_ops)
 #undef REQUIRED_EXTENSIONS
 
+#define REQUIRED_EXTENSIONS XTHEADVDOT_EXT
+DEF_RVV_FUNCTION (th_vpnclipu, narrow_alu, none_m_preds, u_narrow_shift_vwv_ops)
+DEF_RVV_FUNCTION (th_vpnclipu, narrow_alu, none_m_preds, u_narrow_shift_vwx_ops)
+DEF_RVV_FUNCTION (th_vpnclip, narrow_alu, none_m_preds, i_narrow_shift_vwv_ops)
+DEF_RVV_FUNCTION (th_vpnclip, narrow_alu, none_m_preds, i_narrow_shift_vwx_ops)
+
+DEF_RVV_FUNCTION (th_vpwaddu, widen_alu, none_m_preds, u_wvv_ops)
+DEF_RVV_FUNCTION (th_vpwaddu, widen_alu, none_m_preds, u_wvx_ops)
+DEF_RVV_FUNCTION (th_vpwadd, widen_alu, none_m_preds, i_wvv_ops)
+DEF_RVV_FUNCTION (th_vpwadd, widen_alu, none_m_preds, i_wvx_ops)
+
+DEF_RVV_FUNCTION (th_vmaqau, alu, none_m_preds, th_u_maqa_vvvv_ops)
+DEF_RVV_FUNCTION (th_vmaqau, alu, none_m_preds, th_u_maqa_vvxv_ops)
+DEF_RVV_FUNCTION (th_vmaqa, alu, none_m_preds, th_i_maqa_vvvv_ops)
+DEF_RVV_FUNCTION (th_vmaqa, alu, none_m_preds, th_i_maqa_vvxv_ops)
+DEF_RVV_FUNCTION (th_vmaqasu, alu, none_m_preds, th_iu_maqa_vvvv_ops)
+DEF_RVV_FUNCTION (th_vmaqasu, alu, none_m_preds, th_iu_maqa_vvxv_ops)
+DEF_RVV_FUNCTION (th_vmaqaus, alu, none_m_preds, th_ui_maqa_vvvv_ops)
+DEF_RVV_FUNCTION (th_vmaqaus, alu, none_m_preds, th_ui_maqa_vvxv_ops)
+
+DEF_RVV_FUNCTION (th_vpmaqau, alu, none_m_preds, th_u_maqa_vvvv_ops)
+DEF_RVV_FUNCTION (th_vpmaqau, alu, none_m_preds, th_u_maqa_vvxv_ops)
+DEF_RVV_FUNCTION (th_vpmaqa, alu, none_m_preds, th_i_maqa_vvvv_ops)
+DEF_RVV_FUNCTION (th_vpmaqa, alu, none_m_preds, th_i_maqa_vvxv_ops)
+DEF_RVV_FUNCTION (th_vpmaqasu, alu, none_m_preds, th_iu_maqa_vvvv_ops)
+DEF_RVV_FUNCTION (th_vpmaqasu, alu, none_m_preds, th_iu_maqa_vvxv_ops)
+DEF_RVV_FUNCTION (th_vpmaqaus, alu, none_m_preds, th_ui_maqa_vvvv_ops)
+DEF_RVV_FUNCTION (th_vpmaqaus, alu, none_m_preds, th_ui_maqa_vvxv_ops)
+#undef REQUIRED_EXTENSIONS
+
 #undef DEF_RVV_FUNCTION

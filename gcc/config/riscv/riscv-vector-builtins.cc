@@ -555,6 +555,18 @@ static const rvv_type_info diu_ops[] = {
 #include "riscv-vector-builtins-types.def"
   {NUM_VECTOR_TYPES, 0}};
 
+/* A list of SI integer will be registered for intrinsic functions.  */
+static const rvv_type_info si_ops[] = {
+#define DEF_RVV_SI_OPS(TYPE, REQUIRE) {VECTOR_TYPE_##TYPE, REQUIRE},
+#include "riscv-vector-builtins-types.def"
+  {NUM_VECTOR_TYPES, 0}};
+
+/* A list of USI integer will be registered for intrinsic functions.  */
+static const rvv_type_info usi_ops[] = {
+#define DEF_RVV_USI_OPS(TYPE, REQUIRE) {VECTOR_TYPE_##TYPE, REQUIRE},
+#include "riscv-vector-builtins-types.def"
+  {NUM_VECTOR_TYPES, 0}};
+
 static CONSTEXPR const rvv_arg_type_info rvv_arg_type_info_end
   = rvv_arg_type_info (NUM_BASE_TYPES);
 
@@ -1026,6 +1038,48 @@ static CONSTEXPR const rvv_arg_type_info th_uwwvx_args[]
   = {rvv_arg_type_info (RVV_BASE_unsigned_vector),
      rvv_arg_type_info (RVV_BASE_double_trunc_vector),
      rvv_arg_type_info (RVV_BASE_double_trunc_scalar), rvv_arg_type_info_end};
+
+/* A list of args for vector_type func (vector_type, vector_type, vector_type)
+ * function.  */
+static CONSTEXPR const rvv_arg_type_info th_i_maqa_vvv_args[]
+  = {rvv_arg_type_info (RVV_BASE_vector),
+     rvv_arg_type_info (RVV_BASE_maqa_quad_signed_vector),
+     rvv_arg_type_info (RVV_BASE_maqa_quad_signed_vector), rvv_arg_type_info_end};
+
+static CONSTEXPR const rvv_arg_type_info th_i_maqa_vxv_args[]
+  = {rvv_arg_type_info (RVV_BASE_vector),
+     rvv_arg_type_info (RVV_BASE_scalar),
+     rvv_arg_type_info (RVV_BASE_maqa_quad_signed_vector), rvv_arg_type_info_end};
+
+static CONSTEXPR const rvv_arg_type_info th_iu_maqa_vvv_args[]
+  = {rvv_arg_type_info (RVV_BASE_vector),
+     rvv_arg_type_info (RVV_BASE_maqa_quad_signed_vector),
+     rvv_arg_type_info (RVV_BASE_maqa_quad_unsigned_vector), rvv_arg_type_info_end};
+
+static CONSTEXPR const rvv_arg_type_info th_iu_maqa_vxv_args[]
+  = {rvv_arg_type_info (RVV_BASE_vector),
+     rvv_arg_type_info (RVV_BASE_scalar),
+     rvv_arg_type_info (RVV_BASE_maqa_quad_unsigned_vector), rvv_arg_type_info_end};
+
+static CONSTEXPR const rvv_arg_type_info th_ui_maqa_vvv_args[]
+  = {rvv_arg_type_info (RVV_BASE_vector),
+     rvv_arg_type_info (RVV_BASE_maqa_quad_unsigned_vector),
+     rvv_arg_type_info (RVV_BASE_maqa_quad_signed_vector), rvv_arg_type_info_end};
+
+static CONSTEXPR const rvv_arg_type_info th_ui_maqa_vxv_args[]
+  = {rvv_arg_type_info (RVV_BASE_vector),
+     rvv_arg_type_info (RVV_BASE_scalar),
+     rvv_arg_type_info (RVV_BASE_maqa_quad_signed_vector), rvv_arg_type_info_end};
+
+static CONSTEXPR const rvv_arg_type_info th_u_maqa_vvv_args[]
+  = {rvv_arg_type_info (RVV_BASE_vector),
+     rvv_arg_type_info (RVV_BASE_maqa_quad_unsigned_vector),
+     rvv_arg_type_info (RVV_BASE_maqa_quad_unsigned_vector), rvv_arg_type_info_end};
+
+static CONSTEXPR const rvv_arg_type_info th_u_maqa_vxv_args[]
+  = {rvv_arg_type_info (RVV_BASE_vector),
+     rvv_arg_type_info (RVV_BASE_scalar),
+     rvv_arg_type_info (RVV_BASE_maqa_quad_unsigned_vector), rvv_arg_type_info_end};
 
 /* A list of none preds that will be registered for intrinsic functions.  */
 static CONSTEXPR const predication_type_index none_preds[]
@@ -2996,11 +3050,62 @@ static CONSTEXPR const rvv_op_info th_i_wwvv_u_ops
      rvv_arg_type_info (RVV_BASE_unsigned_vector), /* Return type */
      th_uwwvv_args /* Args */};
 
+/* A static operand information for vector_type func (vector_type, vector_type,
+ * vector_type) function registration. */
+static CONSTEXPR const rvv_op_info th_i_maqa_vvvv_ops
+  = {si_ops,				  /* Types */
+     OP_TYPE_vv,			  /* Suffix */
+     rvv_arg_type_info (RVV_BASE_vector), /* Return type */
+     th_i_maqa_vvv_args /* Args */};
+
+static CONSTEXPR const rvv_op_info th_i_maqa_vvxv_ops
+  = {si_ops,				  /* Types */
+     OP_TYPE_vx,			  /* Suffix */
+     rvv_arg_type_info (RVV_BASE_vector), /* Return type */
+     th_i_maqa_vxv_args /* Args */};
+
+static CONSTEXPR const rvv_op_info th_iu_maqa_vvvv_ops
+  = {si_ops,				  /* Types */
+     OP_TYPE_vv,			  /* Suffix */
+     rvv_arg_type_info (RVV_BASE_vector), /* Return type */
+     th_iu_maqa_vvv_args /* Args */};
+
+static CONSTEXPR const rvv_op_info th_iu_maqa_vvxv_ops
+  = {si_ops,				  /* Types */
+     OP_TYPE_vx,			  /* Suffix */
+     rvv_arg_type_info (RVV_BASE_vector), /* Return type */
+     th_iu_maqa_vxv_args /* Args */};
+
+static CONSTEXPR const rvv_op_info th_ui_maqa_vvvv_ops
+  = {si_ops,				  /* Types */
+     OP_TYPE_vv,			  /* Suffix */
+     rvv_arg_type_info (RVV_BASE_vector), /* Return type */
+     th_ui_maqa_vvv_args /* Args */};
+
+static CONSTEXPR const rvv_op_info th_ui_maqa_vvxv_ops
+  = {si_ops,				  /* Types */
+     OP_TYPE_vx,			  /* Suffix */
+     rvv_arg_type_info (RVV_BASE_vector), /* Return type */
+     th_ui_maqa_vxv_args /* Args */};
+
+static CONSTEXPR const rvv_op_info th_u_maqa_vvvv_ops
+  = {usi_ops,				  /* Types */
+     OP_TYPE_vv,			  /* Suffix */
+     rvv_arg_type_info (RVV_BASE_vector), /* Return type */
+     th_u_maqa_vvv_args /* Args */};
+
+static CONSTEXPR const rvv_op_info th_u_maqa_vvxv_ops
+  = {usi_ops,				  /* Types */
+     OP_TYPE_vx,			  /* Suffix */
+     rvv_arg_type_info (RVV_BASE_vector), /* Return type */
+     th_u_maqa_vxv_args /* Args */};
+
 /* A list of all RVV base function types.  */
 static CONSTEXPR const function_type_info function_types[] = {
 #define DEF_RVV_TYPE_INDEX(                                                    \
   VECTOR, MASK, SIGNED, UNSIGNED, EEW8_INDEX, EEW16_INDEX, EEW32_INDEX,        \
   EEW64_INDEX, SHIFT, DOUBLE_TRUNC, QUAD_TRUNC, OCT_TRUNC,                     \
+  MAQA_MASK, MAQA_QUAD_SIGNED_TRUNC, MAQA_QUAD_UNSIGNED_TRUNC,                 \
   DOUBLE_TRUNC_SCALAR, DOUBLE_TRUNC_SIGNED, DOUBLE_TRUNC_UNSIGNED,             \
   DOUBLE_TRUNC_UNSIGNED_SCALAR, DOUBLE_TRUNC_BFLOAT_SCALAR,			\
   DOUBLE_TRUNC_BFLOAT, DOUBLE_TRUNC_FLOAT, FLOAT, LMUL1, WLMUL1,		\
@@ -3036,6 +3141,9 @@ static CONSTEXPR const function_type_info function_types[] = {
     VECTOR_TYPE_##DOUBLE_TRUNC,                                                \
     VECTOR_TYPE_##QUAD_TRUNC,                                                  \
     VECTOR_TYPE_##OCT_TRUNC,                                                   \
+    VECTOR_TYPE_##MAQA_MASK,                                                  \
+    VECTOR_TYPE_##MAQA_QUAD_SIGNED_TRUNC,                                     \
+    VECTOR_TYPE_##MAQA_QUAD_UNSIGNED_TRUNC,                                   \
     VECTOR_TYPE_##DOUBLE_TRUNC_SCALAR,                                         \
     VECTOR_TYPE_##DOUBLE_TRUNC_SIGNED,                                         \
     VECTOR_TYPE_##DOUBLE_TRUNC_UNSIGNED,                                       \
@@ -3776,7 +3884,7 @@ function_builder::apply_predication (const function_instance &instance,
 
   /* These predication types need to apply mask type.  */
   vector_type_index mask_type_index
-    = function_types[instance.type.index].type_indexes[RVV_BASE_mask];
+    = function_types[instance.type.index].type_indexes[instance.base->get_mask_type ()];
   tree mask_type = builtin_types[mask_type_index].vector;
   if (instance.pred == PRED_TYPE_m || instance.pred == PRED_TYPE_tum
       || instance.pred == PRED_TYPE_tumu || instance.pred == PRED_TYPE_mu)
@@ -4104,6 +4212,15 @@ function_expander::mask_mode (void) const
   return TYPE_MODE (builtin_types[mask_type_index].vector);
 }
 
+/* Return the machine_mode of the corresponding mask type.  */
+machine_mode
+function_expander::mask_mode (rvv_base_type mask_type) const
+{
+  vector_type_index mask_type_index
+    = function_types[type.index].type_indexes[mask_type];
+  return TYPE_MODE (builtin_types[mask_type_index].vector);
+}
+
 /* Implement the call using instruction ICODE, with a 1:1 mapping between
    arguments and input operands.  */
 rtx
@@ -4119,7 +4236,7 @@ function_expander::use_exact_insn (insn_code icode)
       if (use_real_mask_p (pred))
 	add_input_operand (arg_offset++);
       else
-	add_all_one_mask_operand (mask_mode ());
+	add_all_one_mask_operand (mask_mode (base->get_mask_type ()));
     }
 
   /* Store operation doesn't have merge operand.  */
