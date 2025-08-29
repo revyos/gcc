@@ -1,7 +1,15 @@
 /* { dg-do compile } */
 /* { dg-skip-if "-march given" { *-*-* } { "-march=*" } } */
 /* { dg-options "-mcpu=xt-c930 -mabi=lp64d" } */
-/* xt-c930 = rv64imafdcbvh_zic64b_zicbom_zicbop_zicboz_ziccamoa_ziccif_zicclsm_ziccrse_zicfilp_zicfiss_zicntr_zicond_zicsr_zifencei_zihintntl_zihintpause_zihpm_zimop_zmmul_za64rs_zaamo_zabha_zacas_zalrsc_zawrs_zfa_zfbfmin_zfh_zfhmin_zca_zcb_zcd_zba_zbb_zbc_zbs_zkr_zkt_zvbb_zvbc_zve32f_zve32x_zve64d_zve64f_zve64x_zvfbfmin_zvfbfwma_zvfh_zvfhmin_zvkb_zvkg_zvkn_zvknc_zvkned_zvkng_zvknha_zvknhb_zvks_zvksc_zvksed_zvksg_zvksh_zvkt_zvl128b_zvl256b_zvl32b_zvl64b_smaia_smepmp_ssaia_sscofpmf_ssstateen_sstc_svinval_svnapot_svpbmt -mabi=lp64d */
+/* xt-c930 = rv64imafdcbvh_zic64b_zicbom_zicbop_zicboz_ziccamoa_ziccif_
+   zicclsm_ziccrse_zicfilp_zicfiss_zicntr_zicond_zicsr_zifencei_zihintntl_
+   zihintpause_zihpm_zimop_zmmul_za64rs_zaamo_zabha_zacas_zalrsc_zawrs_zfa_
+   zfbfmin_zfh_zfhmin_zca_zcb_zcd_zba_zbb_zbc_zbs_zkr_zkt_zvbb_zvbc_zve32f_
+   zve32x_zve64d_zve64f_zve64x_zvfbfmin_zvfbfwma_zvfh_zvfhmin_zvkb_zvkg_zvkn_
+   zvknc_zvkned_zvkng_zvknha_zvknhb_zvks_zvksc_zvksed_zvksg_zvksh_zvkt_zvl128b_zvl256b_
+   zvl32b_zvl64b_smaia_smepmp_ssaia_sscofpmf_ssstateen_sstc_svinval_svnapot_
+   svpbmt_xtheadaioe_xtheadcbop_xtheadvarith_xtheadvcoder_xtheadvcrypto_
+   xtheadvdot_xtheadvsfa_xtheadvsfb -mabi=lp64d */
 
 #if !((__riscv_xlen == 64)			\
       && defined(__riscv_float_abi_double)	\
@@ -86,7 +94,15 @@
       && defined(__riscv_sstc)			\
       && defined(__riscv_svinval)		\
       && defined(__riscv_svnapot)		\
-      && defined(__riscv_svpbmt))
+      && defined(__riscv_svpbmt)		\
+      && defined(__riscv_xtheadaioe)		\
+      && defined(__riscv_xtheadcbop)		\
+      && defined(__riscv_xtheadvarith)		\
+      && defined(__riscv_xtheadvcoder)		\
+      && defined(__riscv_xtheadvcrypto)		\
+      && defined(__riscv_xtheadvdot)		\
+      && defined(__riscv_xtheadvsfa)		\
+      && defined(__riscv_xtheadvsfb))
 #error "unexpected arch"
 #endif
 
