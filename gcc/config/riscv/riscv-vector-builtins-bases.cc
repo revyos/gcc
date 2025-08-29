@@ -2380,6 +2380,8 @@ public:
 
 /* XTheadVsfa */
 /* Implements vfexp2/vftanh/vfsig/vfrec.  */
+/* XTheadVsfb */
+/* Implements vfsin/vfcos.  */
 template<int UNSPEC, enum frm_op_type FRM_OP = NO_FRM>
 class th_unop : public function_base
 {
@@ -2986,6 +2988,11 @@ static CONSTEXPR const th_unop<UNSPEC_TH_VFSIG> th_vfsig_obj;
 static CONSTEXPR const th_unop<UNSPEC_TH_VFSIG, HAS_FRM> th_vfsig_frm_obj;
 static CONSTEXPR const th_unop<UNSPEC_TH_VFREC> th_vfrec_obj;
 static CONSTEXPR const th_unop<UNSPEC_TH_VFREC, HAS_FRM> th_vfrec_frm_obj;
+/* XTheadVsfb */
+static CONSTEXPR const th_unop<UNSPEC_TH_VFSIN> th_vfsin_obj;
+static CONSTEXPR const th_unop<UNSPEC_TH_VFSIN, HAS_FRM> th_vfsin_frm_obj;
+static CONSTEXPR const th_unop<UNSPEC_TH_VFCOS> th_vfcos_obj;
+static CONSTEXPR const th_unop<UNSPEC_TH_VFCOS, HAS_FRM> th_vfcos_frm_obj;
 
 /* Crypto Vector */
 static CONSTEXPR const vandn vandn_obj;
@@ -3393,4 +3400,10 @@ BASE (th_vfsig)
 BASE (th_vfsig_frm)
 BASE (th_vfrec)
 BASE (th_vfrec_frm)
+/* XTheadVsfb  */
+BASE (th_vfsin)
+BASE (th_vfsin_frm)
+BASE (th_vfcos)
+BASE (th_vfcos_frm)
+
 } // end namespace riscv_vector
