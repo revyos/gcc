@@ -2852,6 +2852,12 @@ static CONSTEXPR const rvv_op_info u_vvs_crypto_sew32_ops
      rvv_arg_type_info (RVV_BASE_vector), /* Return type */
      vv_args /* Args */};
 
+static CONSTEXPR const rvv_op_info u_vvvs_crypto_sew64_ops
+  = {crypto_sew64_ops,			   /* Types */
+     OP_TYPE_vs,					   /* Suffix */
+     rvv_arg_type_info (RVV_BASE_vector), /* Return type */
+     vvv_args /* Args */};
+
 static CONSTEXPR const rvv_op_info u_vvs_crypto_sew32_lmul_x2_ops
   = {crypto_sew32_ops,			   /* Types */
      OP_TYPE_vs,					   /* Suffix */

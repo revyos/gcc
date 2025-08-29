@@ -2304,6 +2304,31 @@ public:
   }
 };
 
+/* XTheadVcrypto */
+/* Implements th.vmacc54l.vv/th.vmacc54l.vs/th.vmacc54h.vv/th.vmacc54h.vs.  */
+template<bool HIGH_P>
+class th_vcrypto : public function_base
+{
+public:
+  bool has_merge_operand_p () const override { return false; }
+  rtx expand (function_expander &e) const override
+  {
+    unsigned unspec; 
+    switch (e.op_info->op)
+      {
+      case OP_TYPE_vv:
+	unspec = HIGH_P ? UNSPEC_TH_VMACC54H_VV : UNSPEC_TH_VMACC54L_VV;
+	break;
+      case OP_TYPE_vs:
+	unspec = HIGH_P ? UNSPEC_TH_VMACC54H_VS : UNSPEC_TH_VMACC54L_VS;
+	break;
+      default:
+	gcc_unreachable ();
+      }
+    return e.use_exact_insn (code_for_th_pred (unspec, unspec, e.vector_mode ()));
+  }
+};
+
 /* Below implements are vector crypto */
 /* Implements vandn.[vv,vx] */
 class vandn : public function_base
@@ -2868,6 +2893,9 @@ static CONSTEXPR const th_vcoder<UNSPEC_TH_VWABD, true> th_vwabd_obj;
 static CONSTEXPR const th_vcoder<UNSPEC_TH_VWABDU, true> th_vwabdu_obj;
 static CONSTEXPR const th_vcoder<UNSPEC_TH_VWABA, false> th_vwaba_obj;
 static CONSTEXPR const th_vcoder<UNSPEC_TH_VWABAU, false> th_vwabau_obj;
+/* XTheadVcrypto */
+static CONSTEXPR const th_vcrypto<false> th_vmacc54l_obj;
+static CONSTEXPR const th_vcrypto<true> th_vmacc54h_obj;
 
 /* Crypto Vector */
 static CONSTEXPR const vandn vandn_obj;
@@ -3250,4 +3278,7 @@ BASE (th_vwabd)
 BASE (th_vwabdu)
 BASE (th_vwaba)
 BASE (th_vwabau)
+/* XTheadVcrypto */
+BASE (th_vmacc54l)
+BASE (th_vmacc54h)
 } // end namespace riscv_vector
