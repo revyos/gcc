@@ -517,6 +517,8 @@ Mask(XTHEADVARITH)  Var(riscv_xthead_subext)
 
 Mask(XTHEADVCODER)  Var(riscv_xthead_subext)
 
+Mask(XTHEADVCRYPTO) Var(riscv_xthead_subext)
+
 Mask(XTHEADVECTOR)  Var(riscv_xthead_subext)
 
 TargetVariable
