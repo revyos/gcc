@@ -379,6 +379,15 @@ extern const function_base *const th_vpmaqa;
 extern const function_base *const th_vpmaqau;
 extern const function_base *const th_vpmaqasu;
 extern const function_base *const th_vpmaqaus;
+/* XTheadVsfa */
+extern const function_base *const th_vfexp2;
+extern const function_base *const th_vfexp2_frm;
+extern const function_base *const th_vftanh;
+extern const function_base *const th_vftanh_frm;
+extern const function_base *const th_vfsig;
+extern const function_base *const th_vfsig_frm;
+extern const function_base *const th_vfrec;
+extern const function_base *const th_vfrec_frm;
 }
 
 } // end namespace riscv_vector

@@ -567,6 +567,12 @@ static const rvv_type_info usi_ops[] = {
 #include "riscv-vector-builtins-types.def"
   {NUM_VECTOR_TYPES, 0}};
 
+/* A list of SF will be registered for intrinsic functions.  */
+static const rvv_type_info sf_ops[] = {
+#define DEF_RVV_SF_OPS(TYPE, REQUIRE) {VECTOR_TYPE_##TYPE, REQUIRE},
+#include "riscv-vector-builtins-types.def"
+  {NUM_VECTOR_TYPES, 0}};
+
 static CONSTEXPR const rvv_arg_type_info rvv_arg_type_info_end
   = rvv_arg_type_info (NUM_BASE_TYPES);
 
@@ -3099,6 +3105,12 @@ static CONSTEXPR const rvv_op_info th_u_maqa_vvxv_ops
      OP_TYPE_vx,			  /* Suffix */
      rvv_arg_type_info (RVV_BASE_vector), /* Return type */
      th_u_maqa_vxv_args /* Args */};
+
+static CONSTEXPR const rvv_op_info sf_v_ops
+  = {sf_ops,				  /* Types */
+     OP_TYPE_v,				  /* Suffix */
+     rvv_arg_type_info (RVV_BASE_vector), /* Return type */
+     v_args /* Args */};
 
 /* A list of all RVV base function types.  */
 static CONSTEXPR const function_type_info function_types[] = {
