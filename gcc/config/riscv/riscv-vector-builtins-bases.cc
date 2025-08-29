@@ -2230,6 +2230,25 @@ public:
   }
 };
 
+/* XTheadVarith */
+/* Implements th.vgmulxor.vv/th.vilo.vv/th.vile.vv/th.vcrcfoldr.vv
+   th.vcrcfoldn.vv.  */
+template<int UNSPEC>
+class th_varith : public function_base
+{
+public:
+  bool apply_mask_policy_p () const override { return false; }
+  bool use_mask_predication_p () const override { return false; }
+  bool has_merge_operand_p () const override
+  {
+    return (UNSPEC == UNSPEC_TH_VILE || UNSPEC == UNSPEC_TH_VILO);
+  }
+  rtx expand (function_expander &e) const override
+  {
+    return e.use_exact_insn (code_for_th_pred (UNSPEC, e.vector_mode ()));
+  }
+};
+
 /* Below implements are vector crypto */
 /* Implements vandn.[vv,vx] */
 class vandn : public function_base
@@ -2777,6 +2796,12 @@ static CONSTEXPR const th_loadstore_width<true, LST_INDEXED, UNSPEC_TH_VSUXB> vs
 static CONSTEXPR const th_loadstore_width<true, LST_INDEXED, UNSPEC_TH_VSUXH> vsuxh_obj;
 static CONSTEXPR const th_loadstore_width<true, LST_INDEXED, UNSPEC_TH_VSUXW> vsuxw_obj;
 static CONSTEXPR const th_extract vext_x_v_obj;
+/* XTheadVarith */
+static CONSTEXPR const th_varith<UNSPEC_TH_VGMULXOR> th_vgmulxor_obj;
+static CONSTEXPR const th_varith<UNSPEC_TH_VILO> th_vilo_obj;
+static CONSTEXPR const th_varith<UNSPEC_TH_VILE> th_vile_obj;
+static CONSTEXPR const th_varith<UNSPEC_TH_VCRCFOLDR> th_vcrcfoldr_obj;
+static CONSTEXPR const th_varith<UNSPEC_TH_VCRCFOLDN> th_vcrcfoldn_obj;
 
 /* Crypto Vector */
 static CONSTEXPR const vandn vandn_obj;
@@ -3142,4 +3167,10 @@ BASE (vfwcvtbf16_f)
 /* Zvfbfwma */
 BASE (vfwmaccbf16)
 BASE (vfwmaccbf16_frm)
+/* XTheadVarith */
+BASE (th_vgmulxor)
+BASE (th_vilo)
+BASE (th_vile)
+BASE (th_vcrcfoldr)
+BASE (th_vcrcfoldn)
 } // end namespace riscv_vector

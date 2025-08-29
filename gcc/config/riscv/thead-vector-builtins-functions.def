@@ -36,4 +36,12 @@ DEF_RVV_FUNCTION (vsuxw, th_indexed_loadstore_width, none_m_preds, all_v_scalar_
 DEF_RVV_FUNCTION (vext_x_v, th_extract, none_preds, iu_x_s_u_ops)
 #undef REQUIRED_EXTENSIONS
 
+#define REQUIRED_EXTENSIONS XTHEADVARITH_EXT
+DEF_RVV_FUNCTION (th_vgmulxor, alu, none_tu_preds, th_qu_vvv_ops)
+DEF_RVV_FUNCTION (th_vilo, alu, none_tu_preds, iu_vvv_ops)
+DEF_RVV_FUNCTION (th_vile, alu, none_tu_preds, iu_vvv_ops)
+DEF_RVV_FUNCTION (th_vcrcfoldr, alu, none_tu_preds, th_diu_vvvv_ops)
+DEF_RVV_FUNCTION (th_vcrcfoldn, alu, none_tu_preds, th_diu_vvvv_ops)
+#undef REQUIRED_EXTENSIONS
+
 #undef DEF_RVV_FUNCTION

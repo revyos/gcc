@@ -346,6 +346,12 @@ extern const function_base *const vfwcvtbf16_f;
 /* Zvfbfwma */
 extern const function_base *const vfwmaccbf16;
 extern const function_base *const vfwmaccbf16_frm;
+/* XTheadVarith */
+extern const function_base *const th_vgmulxor;
+extern const function_base *const th_vilo;
+extern const function_base *const th_vile;
+extern const function_base *const th_vcrcfoldr;
+extern const function_base *const th_vcrcfoldn;
 }
 
 } // end namespace riscv_vector
