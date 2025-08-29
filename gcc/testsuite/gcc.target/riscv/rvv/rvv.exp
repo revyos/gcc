@@ -43,6 +43,8 @@ dg-runtest [lsort [glob -nocomplain $srcdir/$subdir/xtheadvcoder/*.\[cS\]]] \
 	"" $CFLAGS
 dg-runtest [lsort [glob -nocomplain $srcdir/$subdir/xtheadvcrypto/*.\[cS\]]] \
 	"" $CFLAGS
+dg-runtest [lsort [glob -nocomplain $srcdir/$subdir/xtheadvdot/*.\[cS\]]] \
+	"" $CFLAGS
 dg-runtest [lsort [glob -nocomplain $srcdir/$subdir/xtheadvector/*.\[cS\]]] \
 	"" $CFLAGS
 gcc-dg-runtest [lsort [glob -nocomplain $srcdir/$subdir/vsetvl/*.\[cS\]]] \
