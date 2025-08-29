@@ -25,6 +25,13 @@
   UNSPEC_TH_VSUXW
 
   UNSPEC_TH_VWLDST
+
+  ; XTheadVarith
+  UNSPEC_TH_VGMULXOR
+  UNSPEC_TH_VILO
+  UNSPEC_TH_VILE
+  UNSPEC_TH_VCRCFOLDR
+  UNSPEC_TH_VCRCFOLDN
 ])
 
 (define_int_iterator UNSPEC_TH_VLMEM_OP [
@@ -349,4 +356,89 @@
   "TARGET_XTHEADVECTOR"
   "vext.x.v\t%0,%1,%2"
   [(set_attr "type" "vimovvx")
+   (set_attr "mode" "<MODE>")])
+
+;; XTheadVarith
+(define_int_iterator UNSPEC_TH_VGMULXOR_IT [
+  UNSPEC_TH_VGMULXOR
+])
+
+(define_int_iterator UNSPEC_TH_VIL_IT [
+  UNSPEC_TH_VILO
+  UNSPEC_TH_VILE
+])
+
+(define_int_iterator UNSPEC_TH_VCRCFOLD_IT [
+  UNSPEC_TH_VCRCFOLDR
+  UNSPEC_TH_VCRCFOLDN
+])
+
+(define_int_attr xtheadvarith_ins_name [
+  (UNSPEC_TH_VGMULXOR "vgmulxor")
+  (UNSPEC_TH_VILO "vilo") (UNSPEC_TH_VILE "vile")
+  (UNSPEC_TH_VCRCFOLDR "vcrcfoldr") (UNSPEC_TH_VCRCFOLDN "vcrcfoldn")
+])
+  
+(define_mode_iterator VI_Q [
+  RVVM8QI RVVM4QI RVVM2QI RVVM1QI RVVMF2QI RVVMF4QI (RVVMF8QI "TARGET_MIN_VLEN > 32")
+])
+
+(define_insn "@th_pred_<xtheadvarith_ins_name><mode>"
+  [(set (match_operand:VI_Q 0 "register_operand"    "=&vr")
+     (if_then_else:VI_Q
+       (unspec:<VM>
+         [(match_operand 4 "vector_length_operand" " rK")
+          (match_operand 5 "const_int_operand"     "  i")
+          (match_operand 6 "const_int_operand"     "  i")
+          (reg:SI VL_REGNUM)
+          (reg:SI VTYPE_REGNUM)] UNSPEC_VPREDICATE)
+       (unspec:VI_Q
+         [(match_operand:VI_Q 1 "register_operand" " 0")
+          (match_operand:VI_Q 2 "register_operand" "vr")
+	  (match_operand:VI_Q 3 "register_operand" "vr")] UNSPEC_TH_VGMULXOR_IT)
+       (match_dup 1)))]
+  "TARGET_VECTOR && TARGET_XTHEADVARITH"
+  "th.<xtheadvarith_ins_name>.vv\t%0,%2,%3"
+  [(set_attr "type" "vcompress")
+   (set_attr "mode" "<MODE>")])
+
+(define_insn "@th_pred_<xtheadvarith_ins_name><mode>"
+  [(set (match_operand:VI 0 "register_operand"           "=vr, vr")
+    (if_then_else:VI
+      (unspec:<VM>
+        [(match_operand 4 "vector_length_operand"    " rK, rK")
+        (match_operand 5 "const_int_operand"        " i,  i")
+        (match_operand 6 "const_int_operand"        " i,  i")
+        (reg:SI VL_REGNUM)
+        (reg:SI VTYPE_REGNUM)] UNSPEC_VPREDICATE)
+      (unspec:VI
+        [(match_operand:VI 2 "register_operand" "vr,vr")
+         (match_operand:VI 3 "register_operand" "vr,vr")] UNSPEC_TH_VIL_IT)
+      (match_operand:VI 1 "vector_merge_operand"     "vu,0")))]
+  "TARGET_VECTOR && TARGET_XTHEADVARITH"
+  "th.<xtheadvarith_ins_name>.vv\t%0,%2,%3"
+  [(set_attr "type" "vcompress")
+   (set_attr "mode" "<MODE>")
+   (set_attr "merge_op_idx" "1")
+   (set_attr "vl_op_idx" "4")
+   (set (attr "ta") (symbol_ref "riscv_vector::get_ta(operands[5])"))
+   (set (attr "avl_type_idx") (const_int 6))])
+
+(define_insn "@th_pred_<xtheadvarith_ins_name><mode>"
+  [(set (match_operand:VI_D 0 "register_operand"     "=vr")
+     (if_then_else:VI_D
+       (unspec:<VM>
+         [(match_operand 4 "vector_length_operand"     "rK")
+          (match_operand 5 "const_int_operand"         " i")
+          (match_operand 6 "const_int_operand"         " i")
+          (reg:SI VL_REGNUM)
+          (reg:SI VTYPE_REGNUM)] UNSPEC_VPREDICATE)
+       (unspec:VI_D
+          [(match_operand:VI_D 1 "register_operand" " 0")
+           (match_operand:VI_D 2 "register_operand" "vr")
+           (match_operand:VI_D 3 "register_operand" "vr")] UNSPEC_TH_VCRCFOLD_IT)
+       (match_dup 1)))]
+  "TARGET_VECTOR && TARGET_XTHEADVARITH"
+  "th.<xtheadvarith_ins_name>.vv\t%0,%2,%3"
+  [(set_attr "type" "vcompress")
    (set_attr "mode" "<MODE>")])

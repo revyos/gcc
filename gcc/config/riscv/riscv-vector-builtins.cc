@@ -543,6 +543,18 @@ static const rvv_type_info crypto_sew64_ops[] = {
 #include "riscv-vector-builtins-types.def"
   {NUM_VECTOR_TYPES, 0}};
 
+/* A list of unsigned sew8/sew32 integer will be registered for intrinsic functions.  */
+static const rvv_type_info qu_ops[] = {
+#define DEF_RVV_QU_OPS(TYPE, REQUIRE) {VECTOR_TYPE_##TYPE, REQUIRE},
+#include "riscv-vector-builtins-types.def"
+  {NUM_VECTOR_TYPES, 0}};
+
+/* A list of sew64 integer will be registered for intrinsic functions.  */
+static const rvv_type_info diu_ops[] = {
+#define DEF_RVV_DIU_OPS(TYPE, REQUIRE) {VECTOR_TYPE_##TYPE, REQUIRE},
+#include "riscv-vector-builtins-types.def"
+  {NUM_VECTOR_TYPES, 0}};
+
 static CONSTEXPR const rvv_arg_type_info rvv_arg_type_info_end
   = rvv_arg_type_info (NUM_BASE_TYPES);
 
@@ -2856,6 +2868,18 @@ static CONSTEXPR const rvv_op_info u_vvx_crypto_sew64_ops
 static CONSTEXPR const rvv_op_info u_vvvv_crypto_sew64_ops
   = {crypto_sew64_ops,			   /* Types */
      OP_TYPE_vv,					   /* Suffix */
+     rvv_arg_type_info (RVV_BASE_vector), /* Return type */
+     vvv_args /* Args */};
+
+static CONSTEXPR const rvv_op_info th_qu_vvv_ops
+  = {qu_ops,				/* Types */
+     OP_TYPE_vv,			/* Suffix */
+     rvv_arg_type_info (RVV_BASE_vector), /* Return type */
+     vvv_args /* Args */};
+
+static CONSTEXPR const rvv_op_info th_diu_vvvv_ops
+  = {diu_ops,				/* Types */
+     OP_TYPE_vv,			/* Suffix */
      rvv_arg_type_info (RVV_BASE_vector), /* Return type */
      vvv_args /* Args */};
 
