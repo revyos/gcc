@@ -2249,6 +2249,61 @@ public:
   }
 };
 
+/* XTheadVcoder */
+/* Implements th.vabd.vv/th.vabd.vx/th.vabd.vi
+   th.vabdu.vv/th.vabdu.vx/th.vabdu.vi
+   th.vaba.vv/th.vaba.vx/th.vaba.vi
+   th.vabau.vv/th.vabau.vx/th.vabau.vi
+   th.vwabd.vv/th.vwabd.vx/th.vwabdu.vv/th.vwabdu.vx
+   th.vwaba.vv/th.vwaba.vx/th.vwabau.vv/th.vwabau.vx.  */
+template<int UNSPEC, bool HAS_TARGET>
+class th_vcoder : public function_base
+{
+public:
+  bool has_merge_operand_p () const override { return HAS_TARGET; }
+  rtx expand (function_expander &e) const override
+  {
+    switch (e.op_info->op)
+      {
+      case OP_TYPE_vx:
+	return e.use_exact_insn (code_for_th_pred_vcoder_scalar (UNSPEC, e.vector_mode ()));
+      case OP_TYPE_vf:
+	return e.use_exact_insn (code_for_th_pred_vcoder_scalar (UNSPEC, e.vector_mode ()));
+      case OP_TYPE_vv:
+	return e.use_exact_insn (code_for_th_pred_vcoder (UNSPEC, e.vector_mode ()));
+      default:
+	gcc_unreachable ();
+      }
+  }
+};
+
+/* Implements th.vfabd.vv/th.vfabd.vf */
+template <bool MAY_REQUIRE_FRM = false, enum frm_op_type FRM_OP = NO_FRM>
+class th_vcoder_float : public function_base
+{
+public:
+  bool has_merge_operand_p () const override { return true; }
+  bool has_rounding_mode_operand_p () const override
+  {
+    return FRM_OP == HAS_FRM;
+  }
+
+  bool may_require_frm_p () const override { return MAY_REQUIRE_FRM; }
+
+  rtx expand (function_expander &e) const override
+  {
+    switch (e.op_info->op)
+      {
+      case OP_TYPE_vf:
+	return e.use_exact_insn (code_for_th_pred_vcoder_float_scalar (e.vector_mode ()));
+      case OP_TYPE_vv:
+	return e.use_exact_insn (code_for_th_pred_vcoder_float (e.vector_mode ()));
+      default:
+	gcc_unreachable ();
+      }
+  }
+};
+
 /* Below implements are vector crypto */
 /* Implements vandn.[vv,vx] */
 class vandn : public function_base
@@ -2802,6 +2857,17 @@ static CONSTEXPR const th_varith<UNSPEC_TH_VILO> th_vilo_obj;
 static CONSTEXPR const th_varith<UNSPEC_TH_VILE> th_vile_obj;
 static CONSTEXPR const th_varith<UNSPEC_TH_VCRCFOLDR> th_vcrcfoldr_obj;
 static CONSTEXPR const th_varith<UNSPEC_TH_VCRCFOLDN> th_vcrcfoldn_obj;
+/* XTheadVcoder */
+static CONSTEXPR const th_vcoder<UNSPEC_TH_VABD, true> th_vabd_obj;
+static CONSTEXPR const th_vcoder<UNSPEC_TH_VABDU, true> th_vabdu_obj;
+static CONSTEXPR const th_vcoder<UNSPEC_TH_VABA, false> th_vaba_obj;
+static CONSTEXPR const th_vcoder<UNSPEC_TH_VABAU, false> th_vabau_obj;
+static CONSTEXPR const th_vcoder_float<true> th_vfabd_obj;
+static CONSTEXPR const th_vcoder_float<true, HAS_FRM> th_vfabd_frm_obj;
+static CONSTEXPR const th_vcoder<UNSPEC_TH_VWABD, true> th_vwabd_obj;
+static CONSTEXPR const th_vcoder<UNSPEC_TH_VWABDU, true> th_vwabdu_obj;
+static CONSTEXPR const th_vcoder<UNSPEC_TH_VWABA, false> th_vwaba_obj;
+static CONSTEXPR const th_vcoder<UNSPEC_TH_VWABAU, false> th_vwabau_obj;
 
 /* Crypto Vector */
 static CONSTEXPR const vandn vandn_obj;
@@ -3173,4 +3239,15 @@ BASE (th_vilo)
 BASE (th_vile)
 BASE (th_vcrcfoldr)
 BASE (th_vcrcfoldn)
+/* XTheadVcoder  */
+BASE (th_vabd)
+BASE (th_vabdu)
+BASE (th_vaba)
+BASE (th_vabau)
+BASE (th_vfabd)
+BASE (th_vfabd_frm)
+BASE (th_vwabd)
+BASE (th_vwabdu)
+BASE (th_vwaba)
+BASE (th_vwabau)
 } // end namespace riscv_vector

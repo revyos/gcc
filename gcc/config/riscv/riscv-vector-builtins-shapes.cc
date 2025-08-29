@@ -1287,6 +1287,50 @@ struct crypto_vv_no_op_type_def : public build_base
   }
 };
 
+/* th_alu_u_def class.  */
+struct th_alu_u_def : public build_base
+{
+  char *get_name (function_builder &b, const function_instance &instance,
+		  bool overloaded_p) const override
+  {
+    /* Return nullptr if it can not be overloaded.  */
+    if (overloaded_p && !instance.base->can_be_overloaded_p (instance.pred))
+      return nullptr;
+
+    b.append_base_name (instance.base_name);
+
+    /* vop<sew>_<op> --> vop<sew>_<op>_<type>.  */
+    if (!overloaded_p)
+      {
+	b.append_name (operand_suffixes[instance.op_info->op]);
+	b.append_name (type_suffixes[instance.type.index + 1].vector);
+      }
+
+    /* According to rvv-intrinsic-doc, it does not add "_m" suffix
+       for vop_m C++ overloaded API.  */
+    if (overloaded_p && instance.pred == PRED_TYPE_m)
+      return b.finish_name ();
+    b.append_name (predication_suffixes[instance.pred]);
+    return b.finish_name ();
+  }
+
+  bool check (function_checker &c) const override
+  {
+    /* Check whether rounding mode argument is a valid immediate.  */
+    if (c.base->has_rounding_mode_operand_p ())
+      {
+	/* Some invalid overload intrinsic like below will have zero for
+	   c.arg_num ().  Thus, make sure arg_num is big enough here.
+	   __riscv_vaadd () will make c.arg_num () == 0.  */
+	if (!c.any_type_float_p () && c.arg_num () >= 2)
+	  return c.require_immediate (c.arg_num () - 2, VXRM_RNU, VXRM_ROD);
+	/* TODO: We will support floating-point intrinsic modeling
+	   rounding mode in the future.  */
+      }
+    return true;
+  }
+};
+
 SHAPE(vsetvl, vsetvl)
 SHAPE(vsetvl, vsetvlmax)
 SHAPE(loadstore, loadstore)
@@ -1321,4 +1365,5 @@ SHAPE(seg_fault_load, seg_fault_load)
 SHAPE(crypto_vv, crypto_vv)
 SHAPE(crypto_vi, crypto_vi)
 SHAPE(crypto_vv_no_op_type, crypto_vv_no_op_type)
+SHAPE(th_alu_u, th_alu_u)
 } // end namespace riscv_vector

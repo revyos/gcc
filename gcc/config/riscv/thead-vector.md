@@ -32,6 +32,17 @@
   UNSPEC_TH_VILE
   UNSPEC_TH_VCRCFOLDR
   UNSPEC_TH_VCRCFOLDN
+
+  ; XTheadVcoder
+  UNSPEC_TH_VABD
+  UNSPEC_TH_VABDU
+  UNSPEC_TH_VABA
+  UNSPEC_TH_VABAU
+  UNSPEC_TH_VFABD
+  UNSPEC_TH_VWABD
+  UNSPEC_TH_VWABDU
+  UNSPEC_TH_VWABA
+  UNSPEC_TH_VWABAU
 ])
 
 (define_int_iterator UNSPEC_TH_VLMEM_OP [
@@ -442,3 +453,193 @@
   "th.<xtheadvarith_ins_name>.vv\t%0,%2,%3"
   [(set_attr "type" "vcompress")
    (set_attr "mode" "<MODE>")])
+
+;; XTheadVcoder
+(define_int_iterator UNSPEC_TH_VCODER_VAB_IT [
+  UNSPEC_TH_VABD
+  UNSPEC_TH_VABDU
+  UNSPEC_TH_VABA
+  UNSPEC_TH_VABAU
+])
+
+(define_int_iterator UNSPEC_TH_VCODER_VAB_S_IT[
+  UNSPEC_TH_VABD
+  UNSPEC_TH_VABA
+])
+
+(define_int_iterator UNSPEC_TH_VCODER_VAB_U_IT[
+  UNSPEC_TH_VABDU
+  UNSPEC_TH_VABAU
+])
+
+(define_int_iterator UNSPEC_TH_VCODER_VWAB_IT [
+  UNSPEC_TH_VWABD
+  UNSPEC_TH_VWABDU
+  UNSPEC_TH_VWABA
+  UNSPEC_TH_VWABAU
+])
+
+(define_int_attr xtheadvcoder_insn [
+  (UNSPEC_TH_VABD "vabd") (UNSPEC_TH_VABDU "vabdu")
+  (UNSPEC_TH_VABA "vaba") (UNSPEC_TH_VABAU "vabau")
+  (UNSPEC_TH_VWABD "vwabd") (UNSPEC_TH_VWABDU "vwabdu")
+  (UNSPEC_TH_VWABA "vwaba") (UNSPEC_TH_VWABAU "vwabau")])
+
+(define_insn "@th_pred_vcoder_<xtheadvcoder_insn><mode>"
+  [(set (match_operand:V_VLSI 0 "register_operand"	"=vd, vd, vr, vr, vd, vd, vr, vr")
+	(if_then_else:V_VLSI
+	  (unspec:<VM>
+	    [(match_operand:<VM> 1 "vector_mask_operand" " vm, vm,Wc1, Wc1, vm, vm,Wc1,Wc1")
+	     (match_operand 5 "vector_length_operand"    " rK, rK, rK,  rK, rK, rK, rK, rK")
+	     (match_operand 6 "const_int_operand"	 "  i,  i,  i,   i,  i,  i,  i,  i")
+	     (match_operand 7 "const_int_operand"	 "  i,  i,  i,   i,  i,  i,  i,  i")
+	     (match_operand 8 "const_int_operand"	 "  i,  i,  i,   i,  i,  i,  i,  i")
+	     (reg:SI VL_REGNUM)
+	     (reg:SI VTYPE_REGNUM)] UNSPEC_VPREDICATE)
+	  (unspec:V_VLSI
+	    [(match_operand:V_VLSI 3 "register_operand" "vr,vr,vr,vr,vr,vr,vr,vr")
+	     (match_operand:V_VLSI 4 "vector_arith_operand" "vr,vr,vr,vr,vi,vi,vi,vi")] UNSPEC_TH_VCODER_VAB_S_IT)
+	  (match_operand:V_VLSI 2 "vector_merge_operand"     "vu,0,vu,0,vu,0,vu,0")))]
+  "TARGET_VECTOR && TARGET_XTHEADVCODER"
+  "th.<xtheadvcoder_insn>.v%o4\t%0,%3,%4%p1"
+  [(set_attr "type" "vialu")
+   (set_attr "mode" "<MODE>")])
+
+(define_insn "@th_pred_vcoder_<xtheadvcoder_insn><mode>"
+  [(set (match_operand:V_VLSI 0 "register_operand"	"=vd, vd, vr, vr, vd, vd, vr, vr")
+	(if_then_else:V_VLSI
+	  (unspec:<VM>
+	    [(match_operand:<VM> 1 "vector_mask_operand" " vm, vm,Wc1, Wc1, vm, vm,Wc1,Wc1")
+	     (match_operand 5 "vector_length_operand"    " rK, rK, rK,  rK, rK, rK, rK, rK")
+	     (match_operand 6 "const_int_operand"	 "  i,  i,  i,   i,  i,  i,  i,  i")
+	     (match_operand 7 "const_int_operand"	 "  i,  i,  i,   i,  i,  i,  i,  i")
+	     (match_operand 8 "const_int_operand"	 "  i,  i,  i,   i,  i,  i,  i,  i")
+	     (reg:SI VL_REGNUM)
+	     (reg:SI VTYPE_REGNUM)] UNSPEC_VPREDICATE)
+	  (unspec:V_VLSI
+	    [(match_operand:V_VLSI 3 "register_operand" "vr,vr,vr,vr,vr,vr,vr,vr")
+	     (match_operand:V_VLSI 4 "vector_shift_operand" "vr,vr,vr,vr,vi,vi,vi,vi")] UNSPEC_TH_VCODER_VAB_U_IT)
+	  (match_operand:V_VLSI 2 "vector_merge_operand"     "vu,0,vu,0,vu,0,vu,0")))]
+  "TARGET_VECTOR && TARGET_XTHEADVCODER"
+  "th.<xtheadvcoder_insn>.v%o4\t%0,%3,%4%p1"
+  [(set_attr "type" "vialu")
+   (set_attr "mode" "<MODE>")])
+
+(define_insn "@th_pred_vcoder_float<mode>"
+  [(set (match_operand:V_VLSF 0 "register_operand"           "=vd, vd, vr, vr")
+	(if_then_else:V_VLSF
+	  (unspec:<VM>
+	    [(match_operand:<VM> 1 "vector_mask_operand" " vm, vm,Wc1,Wc1")
+	     (match_operand 5 "vector_length_operand"    " rK, rK, rK, rK")
+	     (match_operand 6 "const_int_operand"        "  i,  i,  i,  i")
+	     (match_operand 7 "const_int_operand"        "  i,  i,  i,  i")
+	     (match_operand 8 "const_int_operand"        "  i,  i,  i,  i")
+	     (match_operand 9 "const_int_operand"        "  i,  i,  i,  i")
+	     (reg:SI VL_REGNUM)
+	     (reg:SI VTYPE_REGNUM)
+	     (reg:SI FRM_REGNUM)] UNSPEC_VPREDICATE)
+	  (unspec:V_VLSF
+	    [(match_operand:V_VLSF 3 "register_operand"       " vr, vr, vr, vr")
+	     (match_operand:V_VLSF 4 "register_operand"       " vr, vr, vr, vr")] UNSPEC_TH_VFABD)
+	  (match_operand:V_VLSF 2 "vector_merge_operand"     " vu,  0, vu,  0")))]
+  "TARGET_VECTOR && TARGET_XTHEADVCODER"
+  "th.vfabd.vv\t%0,%3,%4%p1"
+  [(set_attr "type" "vfalu")
+   (set_attr "mode" "<MODE>")
+   (set (attr "frm_mode")
+	(symbol_ref "riscv_vector::get_frm_mode (operands[9])"))])
+
+(define_insn "@th_pred_vcoder_<xtheadvcoder_insn><mode>_scalar"
+  [(set (match_operand:V_VLSI 0 "register_operand"      "=vd,vd, vr, vr")
+	(if_then_else:V_VLSI
+	  (unspec:<VM>
+	    [(match_operand:<VM> 1 "vector_mask_operand" "vm,vm,Wc1,Wc1")
+	     (match_operand 5 "vector_length_operand"    "rK,rK, rK, rK")
+	     (match_operand 6 "const_int_operand"        " i, i,  i,  i")
+	     (match_operand 7 "const_int_operand"        " i, i,  i,  i")
+	     (match_operand 8 "const_int_operand"        " i, i,  i,  i")
+	     (reg:SI VL_REGNUM)
+	     (reg:SI VTYPE_REGNUM)] UNSPEC_VPREDICATE)
+	  (unspec:V_VLSI
+	    [(match_operand:V_VLSI 3 "register_operand"   "vr,vr, vr, vr")
+	     (vec_duplicate:V_VLSI
+	       (match_operand:<VEL> 4 "reg_or_0_operand"  "rJ,rJ, rJ, rJ"))] UNSPEC_TH_VCODER_VAB_IT)
+	  (match_operand:V_VLSI 2 "vector_merge_operand" "vu, 0, vu,  0")))]
+  "TARGET_VECTOR && TARGET_XTHEADVCODER"
+  "th.<xtheadvcoder_insn>.vx\t%0,%3,%z4%p1"
+  [(set_attr "type" "vialu")
+   (set_attr "mode" "<MODE>")])
+
+(define_insn "@th_pred_vcoder_float<mode>_scalar"
+  [(set (match_operand:VF 0 "register_operand"           "=vd, vd, vr, vr")
+	(if_then_else:VF
+	  (unspec:<VM>
+	    [(match_operand:<VM> 1 "vector_mask_operand" " vm, vm,Wc1,Wc1")
+	     (match_operand 5 "vector_length_operand"    " rK, rK, rK, rK")
+	     (match_operand 6 "const_int_operand"        "  i,  i,  i,  i")
+	     (match_operand 7 "const_int_operand"        "  i,  i,  i,  i")
+	     (match_operand 8 "const_int_operand"        "  i,  i,  i,  i")
+	     (match_operand 9 "const_int_operand"        "  i,  i,  i,  i")
+	     (reg:SI VL_REGNUM)
+	     (reg:SI VTYPE_REGNUM)
+	     (reg:SI FRM_REGNUM)] UNSPEC_VPREDICATE)
+	  (unspec:VF
+	    [(match_operand:VF 3 "register_operand"       " vr, vr, vr, vr")
+	     (vec_duplicate:VF
+	       (match_operand:<VEL> 4 "register_operand"  "  f,  f,  f,  f"))] UNSPEC_TH_VFABD)
+	  (match_operand:VF 2 "vector_merge_operand"     " vu,  0, vu,  0")))]
+  "TARGET_VECTOR && TARGET_XTHEADVCODER"
+  "th.vfabd.vf\t%0,%3,%4%p1"
+  [(set_attr "type" "vfalu")
+   (set_attr "mode" "<MODE>")
+   (set (attr "frm_mode")
+	(symbol_ref "riscv_vector::get_frm_mode (operands[9])"))])
+
+(define_insn "@th_pred_vcoder_<xtheadvcoder_insn><mode>"
+  [(set (match_operand:VWEXTI 0 "register_operand"           "=&vd, &vd, &vr, &vr")
+	(if_then_else:VWEXTI
+	  (unspec:<VM>
+	    [(match_operand:<VM> 1 "vector_mask_operand" " vm, vm,Wc1,Wc1")
+	     (match_operand 5 "vector_length_operand"    " rK, rK, rK, rK")
+	     (match_operand 6 "const_int_operand"        "  i,  i,  i,  i")
+	     (match_operand 7 "const_int_operand"        "  i,  i,  i,  i")
+	     (match_operand 8 "const_int_operand"        "  i,  i,  i,  i")
+	     (reg:SI VL_REGNUM)
+	     (reg:SI VTYPE_REGNUM)] UNSPEC_VPREDICATE)
+	  (unspec:VWEXTI
+	    [(match_operand:<V_DOUBLE_TRUNC> 3 "register_operand"       " vr, vr, vr, vr")
+	     (match_operand:<V_DOUBLE_TRUNC> 4 "register_operand"       " vr, vr, vr, vr")] UNSPEC_TH_VCODER_VWAB_IT)
+	  (match_operand:VWEXTI 2 "vector_merge_operand"     " vu,  0, vu,  0")))]
+  "TARGET_VECTOR && TARGET_XTHEADVCODER"
+  "th.<xtheadvcoder_insn>.vv\t%0,%3,%4%p1"
+  [(set_attr "type" "viwalu")
+   (set_attr "mode" "<V_DOUBLE_TRUNC>")
+   (set_attr "vl_op_idx" "5")
+   (set (attr "ta") (symbol_ref "riscv_vector::get_ta(operands[6])"))
+   (set (attr "ma") (symbol_ref "riscv_vector::get_ma(operands[7])"))
+   (set (attr "avl_type_idx") (const_int 8))])
+
+(define_insn "@th_pred_vcoder_<xtheadvcoder_insn><mode>_scalar"
+  [(set (match_operand:VWEXTI 0 "register_operand"           "=&vd, &vd, &vr, &vr")
+	(if_then_else:VWEXTI
+	  (unspec:<VM>
+	    [(match_operand:<VM> 1 "vector_mask_operand" " vm, vm,Wc1,Wc1")
+	     (match_operand 5 "vector_length_operand"    " rK, rK, rK, rK")
+	     (match_operand 6 "const_int_operand"        "  i,  i,  i,  i")
+	     (match_operand 7 "const_int_operand"        "  i,  i,  i,  i")
+	     (match_operand 8 "const_int_operand"        "  i,  i,  i,  i")
+	     (reg:SI VL_REGNUM)
+	     (reg:SI VTYPE_REGNUM)] UNSPEC_VPREDICATE)
+	  (unspec:VWEXTI
+	    [(match_operand:<V_DOUBLE_TRUNC> 3 "register_operand"       " vr, vr, vr, vr")
+	     (match_operand:<VSUBEL> 4 "register_operand"       " r, r, r, r")] UNSPEC_TH_VCODER_VWAB_IT)
+	  (match_operand:VWEXTI 2 "vector_merge_operand"     " vu,  0, vu,  0")))]
+  "TARGET_VECTOR && TARGET_XTHEADVCODER"
+  "th.<xtheadvcoder_insn>.vx\t%0,%3,%4%p1"
+  [(set_attr "type" "viwalu")
+   (set_attr "mode" "<V_DOUBLE_TRUNC>")
+   (set_attr "vl_op_idx" "5")
+   (set (attr "ta") (symbol_ref "riscv_vector::get_ta(operands[6])"))
+   (set (attr "ma") (symbol_ref "riscv_vector::get_ma(operands[7])"))
+   (set (attr "avl_type_idx") (const_int 8))])
+
