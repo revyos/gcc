@@ -2378,6 +2378,25 @@ public:
   }
 };
 
+/* XTheadVsfa */
+/* Implements vfexp2/vftanh/vfsig/vfrec.  */
+template<int UNSPEC, enum frm_op_type FRM_OP = NO_FRM>
+class th_unop : public function_base
+{
+public:
+  bool has_rounding_mode_operand_p () const override
+  {
+    return FRM_OP == HAS_FRM;
+  }
+
+  bool may_require_frm_p () const override { return true; }
+
+  rtx expand (function_expander &e) const override
+  {
+    return e.use_exact_insn (code_for_th_pred (UNSPEC, e.vector_mode ()));
+  }
+};
+
 /* Below implements are vector crypto */
 /* Implements vandn.[vv,vx] */
 class vandn : public function_base
@@ -2958,6 +2977,15 @@ static CONSTEXPR const th_maqa<UNSPEC_TH_VPMAQA> th_vpmaqa_obj;
 static CONSTEXPR const th_maqa<UNSPEC_TH_VPMAQAU> th_vpmaqau_obj;
 static CONSTEXPR const th_maqa<UNSPEC_TH_VPMAQASU> th_vpmaqasu_obj;
 static CONSTEXPR const th_maqa<UNSPEC_TH_VPMAQAUS> th_vpmaqaus_obj;
+/* XTheadVsfa */
+static CONSTEXPR const th_unop<UNSPEC_TH_VFEXP2> th_vfexp2_obj;
+static CONSTEXPR const th_unop<UNSPEC_TH_VFEXP2, HAS_FRM> th_vfexp2_frm_obj;
+static CONSTEXPR const th_unop<UNSPEC_TH_VFTANH> th_vftanh_obj;
+static CONSTEXPR const th_unop<UNSPEC_TH_VFTANH, HAS_FRM> th_vftanh_frm_obj;
+static CONSTEXPR const th_unop<UNSPEC_TH_VFSIG> th_vfsig_obj;
+static CONSTEXPR const th_unop<UNSPEC_TH_VFSIG, HAS_FRM> th_vfsig_frm_obj;
+static CONSTEXPR const th_unop<UNSPEC_TH_VFREC> th_vfrec_obj;
+static CONSTEXPR const th_unop<UNSPEC_TH_VFREC, HAS_FRM> th_vfrec_frm_obj;
 
 /* Crypto Vector */
 static CONSTEXPR const vandn vandn_obj;
@@ -3356,4 +3384,13 @@ BASE (th_vpmaqa)
 BASE (th_vpmaqau)
 BASE (th_vpmaqasu)
 BASE (th_vpmaqaus)
+/* XTheadVsfa */
+BASE (th_vfexp2)
+BASE (th_vfexp2_frm)
+BASE (th_vftanh)
+BASE (th_vftanh_frm)
+BASE (th_vfsig)
+BASE (th_vfsig_frm)
+BASE (th_vfrec)
+BASE (th_vfrec_frm)
 } // end namespace riscv_vector

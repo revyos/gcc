@@ -129,6 +129,7 @@ enum required_ext
   XTHEADVCRYPTO_EXT,	/* Xtheadvcrypto extension */
   XTHEADVDOT_EXT,	/* Xtheadvdot extension */
   XTHEADVECTOR_EXT,	/* XTheadVector extension */
+  XTHEADVSFA_EXT,	/* Xtheadvsfa extension */
   ZVFBFMIN_EXT,		/* Zvfbfmin externsion */
   ZVFBFWMA_EXT,		/* Zvfbfwma extension */
   /* Please update below to isa_name func when add or remove enum type(s).  */
@@ -168,6 +169,8 @@ static inline const char * reqired_ext_to_isa_name (enum required_ext required)
       return "xtheadvdot";
     case XTHEADVECTOR_EXT:
       return "xthreadvector";
+    case XTHEADVSFA_EXT:
+      return "xtheadvsfa";
     case ZVFBFMIN_EXT:
       return "zvfbfmin";
     case ZVFBFWMA_EXT:
@@ -213,6 +216,8 @@ static inline bool required_extensions_specified (enum required_ext required)
       return TARGET_XTHEADVDOT;
     case XTHEADVECTOR_EXT:
       return TARGET_XTHEADVECTOR;
+    case XTHEADVSFA_EXT:
+      return TARGET_XTHEADVSFA;
     case ZVFBFMIN_EXT:
       return TARGET_ZVFBFMIN;
     case ZVFBFWMA_EXT:
@@ -361,6 +366,8 @@ struct function_group_info
 	return TARGET_XTHEADVDOT;
       case XTHEADVECTOR_EXT:
 	return TARGET_XTHEADVECTOR;
+      case XTHEADVSFA_EXT:
+	return TARGET_XTHEADVSFA;
       case ZVFBFMIN_EXT:
 	return TARGET_ZVFBFMIN;
       case ZVFBFWMA_EXT:
